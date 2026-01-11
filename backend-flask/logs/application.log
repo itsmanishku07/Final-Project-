@@ -2823,3 +2823,356 @@
 2026-01-11 20:18:54,479 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:18:54] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
 2026-01-11 20:18:56,286 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:18:56] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
 2026-01-11 20:18:57,905 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:18:57] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:09,227 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-11 20:33:09,232 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:09,456 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:09,456 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:09,456 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:33:09,458 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:09,459 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:33:09,460 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:09,460 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:09,460 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:09,460 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:33:09,461 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:09,461 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:09,461 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:09,461 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:33:09,464 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-11 20:33:09,464 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:09,464 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:09,464 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:09,464 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:33:09,477 - app - INFO - Flask application initialized in production mode
+2026-01-11 20:33:09,503 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.167.175.219:8080
+2026-01-11 20:33:09,503 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-11 20:33:09,505 - werkzeug - INFO -  * Restarting with stat
+2026-01-11 20:33:10,915 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-11 20:33:10,922 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:11,070 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:11,070 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:11,070 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:33:11,072 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:11,074 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:33:11,074 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:11,074 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:11,075 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:11,075 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:33:11,076 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:11,076 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:11,076 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:11,077 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:33:11,079 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-11 20:33:11,079 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:33:11,079 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:33:11,079 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:33:11,080 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:33:11,092 - app - INFO - Flask application initialized in production mode
+2026-01-11 20:33:11,100 - werkzeug - WARNING -  * Debugger is active!
+2026-01-11 20:33:11,103 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-11 20:33:15,557 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:15] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:33:19,980 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:19] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:33:19,995 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:19] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:20,302 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:20] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:21,902 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:21] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:23,803 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:23] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:28,241 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:28] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:30,066 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:30] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:31,572 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:31] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:33:36,664 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:36] "OPTIONS /api/resumes/0f38b776-5ab7-4ae0-bd71-b633c96dd548/suggestions HTTP/1.1" 200 -
+2026-01-11 20:33:38,539 - services.ai_service - INFO - Getting resume suggestions from Databricks AI
+2026-01-11 20:33:49,105 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:33:49] "GET /api/resumes/0f38b776-5ab7-4ae0-bd71-b633c96dd548/suggestions HTTP/1.1" 200 -
+2026-01-11 20:35:43,029 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:35:43] "OPTIONS /api/resumes/upload HTTP/1.1" 200 -
+2026-01-11 20:35:47,610 - repositories.resume_repository - INFO - Resume saved successfully: Resumee.pdf
+2026-01-11 20:35:47,630 - routes.resume_routes - INFO - Starting AI analysis for resume: 75f440fd-2322-4156-ad06-36d198ae1a4f
+2026-01-11 20:35:47,631 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:35:47] "[35m[1mPOST /api/resumes/upload HTTP/1.1[0m" 201 -
+2026-01-11 20:35:47,645 - services.ai_service - INFO - Analyzing resume text (length: 2781)
+2026-01-11 20:35:47,660 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:35:47] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:35:47,671 - services.ai_service - INFO - Resume analysis completed - 11 skills, 7 years experience
+2026-01-11 20:35:49,587 - repositories.resume_repository - INFO - Resume updated successfully: 75f440fd-2322-4156-ad06-36d198ae1a4f
+2026-01-11 20:35:49,588 - routes.resume_routes - INFO - AI analysis completed for resume: 75f440fd-2322-4156-ad06-36d198ae1a4f
+2026-01-11 20:35:50,538 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:35:50] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:35:54,521 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:35:54] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:36:01,786 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:36:01] "OPTIONS /api/resumes/75f440fd-2322-4156-ad06-36d198ae1a4f/suggestions HTTP/1.1" 200 -
+2026-01-11 20:36:03,753 - services.ai_service - INFO - Getting resume suggestions from Databricks AI
+2026-01-11 20:36:13,100 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:36:13] "GET /api/resumes/75f440fd-2322-4156-ad06-36d198ae1a4f/suggestions HTTP/1.1" 200 -
+2026-01-11 20:37:51,779 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:37:51] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:37:51,780 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:37:51] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:37:53,905 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:37:53] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:37:54,378 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:37:54] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:38:06,616 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:38:06] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:38:08,937 - repositories.user_repository - INFO - User updated successfully: rishumanish07@gmail.com
+2026-01-11 20:38:08,939 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:38:08] "PUT /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:38:11,659 - repositories.user_repository - INFO - User updated successfully: rishumanish07@gmail.com
+2026-01-11 20:38:11,661 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:38:11] "PUT /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:38:56,613 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:38:56] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:38:56,614 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:38:56] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:38:58,531 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:38:58] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:39:00,139 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:00] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:39:02,283 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:02] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:39:02,305 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:02] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:39:04,462 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:04] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:39:07,136 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:07] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:39:07,154 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:07] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:39:07,184 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:07] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:39:09,259 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:09] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:39:11,179 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:39:11] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:12,603 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-11 20:40:12,605 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 20:40:12,606 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:12,610 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:12,612 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-11 20:40:12,617 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 20:40:12,914 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:12,915 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:12] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:13,265 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:13] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-11 20:40:14,540 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:14] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 20:40:14,541 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:14] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-11 20:40:16,049 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:16] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 20:40:16,070 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:16] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:16,425 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:16] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:18,386 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:18] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:19,656 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:19] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:20,322 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:20] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:22,219 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:22] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:23,374 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:23] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:24,711 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:24] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:25,027 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:25] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:25,266 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:25] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:27,225 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:27] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:40:28,137 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:28] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:30,378 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:30] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 20:40:36,682 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:36] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:40:37,285 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:37] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:40:37,309 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:37] "OPTIONS /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:40:37,618 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:37] "OPTIONS /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:40:42,473 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:42] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-11 20:40:42,475 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:42] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-11 20:40:43,078 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:43] "GET /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:40:48,303 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:48] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-11 20:40:50,216 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:50] "GET /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:40:52,942 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:52] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-11 20:40:53,103 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:53] "OPTIONS /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:40:53,104 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:53] "OPTIONS /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:40:58,431 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:40:58] "GET /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:41:04,084 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:04] "GET /api/applications/job/1c4c18c0-3ff6-44c4-9dbd-6642f17e4e62 HTTP/1.1" 200 -
+2026-01-11 20:41:20,672 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:20] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:20,673 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:20] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:20,925 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:41:22,513 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:22] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:22,522 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:41:24,088 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:24] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:34,095 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:34] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:34,099 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:34] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:34,363 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:41:35,828 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:35] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:41:35,837 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:41:37,326 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:41:37] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:18,073 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:18] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:18,076 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:18] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:18,340 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:42:19,946 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:19] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:19,955 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:42:20,608 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:20] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:24,187 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:24] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:24,189 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:24] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:24,442 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:42:25,250 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:25] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:25,258 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:42:25,900 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:25] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 20:42:40,932 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:40] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:42:40,940 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:40] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:42:41,932 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:41] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:42:42,677 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:42] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:42:56,085 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:42:56] "OPTIONS /api/resumes/0f38b776-5ab7-4ae0-bd71-b633c96dd548/suggestions HTTP/1.1" 200 -
+2026-01-11 20:42:57,263 - services.ai_service - INFO - Getting resume suggestions from Databricks AI
+2026-01-11 20:43:07,765 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:43:07] "GET /api/resumes/0f38b776-5ab7-4ae0-bd71-b633c96dd548/suggestions HTTP/1.1" 200 -
+2026-01-11 20:50:41,384 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Manish\\Desktop\\Final Project\\backend-flask\\services\\ai_service.py', reloading
+2026-01-11 20:50:43,754 - werkzeug - INFO -  * Restarting with stat
+2026-01-11 20:50:50,068 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-11 20:50:50,074 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:50:50,313 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:50:50,314 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:50:50,314 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:50:50,318 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:50:50,320 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:50:50,320 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:50:50,321 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:50:50,321 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:50:50,321 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:50:50,322 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:50:50,323 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:50:50,323 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:50:50,323 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:50:50,326 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-11 20:50:50,327 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:50:50,327 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:50:50,327 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:50:50,327 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:50:50,342 - app - INFO - Flask application initialized in production mode
+2026-01-11 20:50:50,358 - werkzeug - WARNING -  * Debugger is active!
+2026-01-11 20:50:50,362 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-11 20:51:34,987 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Manish\\Desktop\\Final Project\\backend-flask\\services\\ai_service.py', reloading
+2026-01-11 20:51:35,214 - werkzeug - INFO -  * Restarting with stat
+2026-01-11 20:51:37,623 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-11 20:51:37,628 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:51:37,798 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:51:37,799 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:51:37,799 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:51:37,801 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:51:37,802 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:51:37,802 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:51:37,803 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:51:37,803 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:51:37,803 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:51:37,804 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:51:37,805 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:51:37,805 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:51:37,806 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:51:37,808 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-11 20:51:37,808 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:51:37,808 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:51:37,809 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:51:37,809 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:51:37,819 - app - INFO - Flask application initialized in production mode
+2026-01-11 20:51:37,830 - werkzeug - WARNING -  * Debugger is active!
+2026-01-11 20:51:37,833 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-11 20:53:27,694 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Manish\\Desktop\\Final Project\\backend-flask\\services\\ai_service.py', reloading
+2026-01-11 20:53:28,438 - werkzeug - INFO -  * Restarting with stat
+2026-01-11 20:53:34,843 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-11 20:53:34,884 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:53:36,116 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:53:36,120 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:53:36,131 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:53:36,145 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:53:36,162 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:53:36,165 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:53:36,167 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:53:36,168 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:53:36,180 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:53:36,186 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:53:36,197 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:53:36,201 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:53:36,207 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:53:36,219 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-11 20:53:36,221 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:53:36,222 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:53:36,225 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:53:36,227 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:53:36,320 - app - INFO - Flask application initialized in production mode
+2026-01-11 20:53:36,385 - werkzeug - WARNING -  * Debugger is active!
+2026-01-11 20:53:36,399 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-11 20:54:49,943 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:54:49] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:54:53,898 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:54:53] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:54:56,631 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:54:56] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:54:56,940 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:54:56] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:54:58,536 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:54:58] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:55:00,496 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:00] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:55:22,917 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:22] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:55:23,561 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:23] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:55:23,578 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:23] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:55:23,890 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:23] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:55:25,450 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:25] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:55:27,344 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:27] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:55:37,012 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:37] "OPTIONS /api/resumes/75f440fd-2322-4156-ad06-36d198ae1a4f/suggestions HTTP/1.1" 200 -
+2026-01-11 20:55:38,854 - services.ai_service - INFO - Getting resume suggestions from Databricks AI
+2026-01-11 20:55:47,975 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:55:47] "GET /api/resumes/75f440fd-2322-4156-ad06-36d198ae1a4f/suggestions HTTP/1.1" 200 -
+2026-01-11 20:58:49,897 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:58:49] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:58:52,510 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:58:52] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 20:58:52,531 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:58:52] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:58:52,837 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:58:52] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:58:54,583 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:58:54] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:58:56,602 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 20:58:56] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 20:59:15,500 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Manish\\Desktop\\Final Project\\backend-flask\\services\\ai_service.py', reloading
+2026-01-11 20:59:18,045 - werkzeug - INFO -  * Restarting with stat
+2026-01-11 20:59:23,627 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-11 20:59:23,647 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:59:24,194 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:59:24,196 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:59:24,197 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:59:24,203 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:59:24,211 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:59:24,212 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:59:24,212 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:59:24,213 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:59:24,214 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:59:24,216 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:59:24,218 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:59:24,219 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:59:24,220 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-11 20:59:24,229 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-11 20:59:24,230 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-11 20:59:24,230 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-11 20:59:24,231 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 20:59:24,232 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-11 20:59:24,270 - app - INFO - Flask application initialized in production mode
+2026-01-11 20:59:24,301 - werkzeug - WARNING -  * Debugger is active!
+2026-01-11 20:59:24,319 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-11 21:00:37,582 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:37] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:00:46,059 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:46] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:00:46,381 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:46] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:00:46,382 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:46] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:00:48,471 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:48] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:00:50,278 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:50] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:00:56,983 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:00:56] "OPTIONS /api/resumes/0f38b776-5ab7-4ae0-bd71-b633c96dd548/suggestions HTTP/1.1" 200 -
+2026-01-11 21:00:59,032 - services.ai_service - INFO - Getting resume suggestions from Databricks AI
+2026-01-11 21:01:09,582 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:09] "GET /api/resumes/0f38b776-5ab7-4ae0-bd71-b633c96dd548/suggestions HTTP/1.1" 200 -
+2026-01-11 21:01:24,024 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:24] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:01:24,697 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:24] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:01:24,949 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:24] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:01:25,252 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:25] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:01:26,976 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:26] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:01:27,061 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:27] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:01:27,429 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:27] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:01:27,803 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:27] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:01:27,848 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:27] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 21:01:28,162 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:28] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 21:01:28,170 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 21:01:29,882 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:29] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:01:30,844 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:30] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 21:01:31,160 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-11 21:01:32,940 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:32] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:01:32,962 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:32] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-11 21:01:34,991 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:01:34] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:15:45,198 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:15:45] "OPTIONS /api/resumes/75f440fd-2322-4156-ad06-36d198ae1a4f/suggestions HTTP/1.1" 200 -
+2026-01-11 21:15:47,460 - services.ai_service - INFO - Getting resume suggestions from Databricks AI
+2026-01-11 21:15:55,357 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:15:55] "GET /api/resumes/75f440fd-2322-4156-ad06-36d198ae1a4f/suggestions HTTP/1.1" 200 -
+2026-01-11 21:17:35,790 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:35] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:35,792 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:35] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:37,843 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:37] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:39,638 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:39] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:49,708 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:49] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:49,709 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:49] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:51,820 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:51] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:53,742 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:53] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:56,725 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:56] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:56,726 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:56] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:17:58,725 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:17:58] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:18:00,572 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:00] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:18:06,830 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:06] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:18:06,831 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:06] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:18:07,978 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:07] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:18:09,419 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:09] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-11 21:18:40,553 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:40,554 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 21:18:40,555 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-11 21:18:40,556 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:18:40,558 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-11 21:18:40,561 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 21:18:40,863 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:18:40,865 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:40] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:41,418 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:41] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 21:18:42,698 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:42] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-11 21:18:42,706 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:42] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-11 21:18:44,467 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:44] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:18:44,470 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:44] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-11 21:18:44,767 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:44] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:46,857 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:46] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-11 21:18:48,194 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:48] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:53,494 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:53] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:53,497 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:53] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:55,967 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:55] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-11 21:18:59,018 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 21:18:59] "GET /api/applications/my-applications HTTP/1.1" 200 -

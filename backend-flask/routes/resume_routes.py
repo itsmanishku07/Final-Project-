@@ -293,3 +293,35 @@ def get_processed_resumes(current_user):
     except Exception as e:
         logger.error(f"Failed to get processed resumes: {e}")
         return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@resume_bp.route('/<resume_id>/suggestions', methods=['GET'])
+@require_auth
+@require_role(['CANDIDATE', 'ADMIN'])
+def get_resume_suggestions(current_user, resume_id):
+    """Get AI-powered suggestions to improve resume"""
+    try:
+        resume = resume_repository.find_by_id(resume_id)
+        if not resume:
+            return jsonify({'success': False, 'message': 'Resume not found'}), 404
+        
+        # Check ownership
+        if current_user.get('role') != 'ADMIN' and resume.user_id != current_user['uid']:
+            return jsonify({'success': False, 'message': 'Unauthorized access'}), 403
+        
+        if not resume.extracted_text:
+            return jsonify({'success': False, 'message': 'Resume text not available'}), 400
+        
+        # Get AI suggestions
+        suggestions = ai_service.get_resume_suggestions(resume.extracted_text)
+        
+        response = {
+            'success': True,
+            'suggestions': suggestions.to_dict()
+        }
+        
+        return jsonify(response)
+        
+    except Exception as e:
+        logger.error(f"Failed to get resume suggestions: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500
