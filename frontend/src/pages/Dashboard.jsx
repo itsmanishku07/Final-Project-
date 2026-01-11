@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import { resumeAPI, jobAPI } from '../services/api'
-import { Upload, Briefcase, Users, BarChart3, FileText, Target } from 'lucide-react'
+import api from '../services/api'
+import { Upload, Briefcase, Users, BarChart3, FileText, Target, TrendingUp, Clock, CheckCircle, Eye } from 'lucide-react'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 // Helper to safely parse dates from backend (handles both ISO strings and invalid values)
@@ -22,7 +23,11 @@ const Dashboard = () => {
     resumes: 0,
     jobs: 0,
     matches: 0,
-    processedResumes: 0
+    processedResumes: 0,
+    applications: 0,
+    shortlisted: 0,
+    pending: 0,
+    totalApplicants: 0
   })
   const [recentActivity, setRecentActivity] = useState([])
   const [loading, setLoading] = useState(true)
@@ -51,7 +56,11 @@ const Dashboard = () => {
 
   const loadCandidateData = async () => {
     try {
-      const resumesResponse = await resumeAPI.getMyResumes()
+      const [resumesResponse, applicationsResponse] = await Promise.all([
+        resumeAPI.getMyResumes(),
+        api.get('/applications/my-applications')
+      ])
+      
       if (resumesResponse.data.success) {
         const resumes = resumesResponse.data.resumes
         setStats(prev => ({
@@ -60,13 +69,40 @@ const Dashboard = () => {
           processedResumes: resumes.filter(r => r.processed).length
         }))
         
-        setRecentActivity(resumes.slice(0, 5).map(resume => ({
+        // Add resume activities
+        const resumeActivities = resumes.slice(0, 3).map(resume => ({
           id: resume.id,
           type: 'resume',
           title: `Uploaded ${resume.file_name || resume.fileName || 'Resume'}`,
           date: parseDate(resume.uploaded_at || resume.uploadedAt),
           status: resume.processed ? 'Processed' : 'Processing'
-        })))
+        }))
+        
+        setRecentActivity(prev => [...resumeActivities])
+      }
+      
+      if (applicationsResponse.data.success) {
+        const applications = applicationsResponse.data.applications
+        const shortlisted = applications.filter(a => a.status === 'SHORTLISTED').length
+        const pending = applications.filter(a => a.status === 'PENDING').length
+        
+        setStats(prev => ({
+          ...prev,
+          applications: applications.length,
+          shortlisted,
+          pending
+        }))
+        
+        // Add application activities
+        const appActivities = applications.slice(0, 3).map(app => ({
+          id: app.id,
+          type: 'application',
+          title: `Applied to ${app.job_title}`,
+          date: parseDate(app.applied_at),
+          status: app.status
+        }))
+        
+        setRecentActivity(prev => [...prev, ...appActivities].slice(0, 5))
       }
     } catch (error) {
       console.error('Failed to load candidate data:', error)
@@ -75,7 +111,11 @@ const Dashboard = () => {
 
   const loadRecruiterData = async () => {
     try {
-      const jobsResponse = await jobAPI.getMyJobs()
+      const [jobsResponse, dashboardResponse] = await Promise.all([
+        jobAPI.getMyJobs(),
+        api.get('/applications/dashboard')
+      ])
+      
       if (jobsResponse.data.success) {
         const jobs = jobsResponse.data.jobs
         setStats(prev => ({
@@ -90,6 +130,16 @@ const Dashboard = () => {
           date: parseDate(job.created_at || job.createdAt),
           status: job.active ? 'Active' : 'Inactive'
         })))
+      }
+      
+      if (dashboardResponse.data.success) {
+        const summary = dashboardResponse.data.summary
+        setStats(prev => ({
+          ...prev,
+          totalApplicants: summary.total_applications || 0,
+          pending: summary.pending_review || 0,
+          shortlisted: summary.shortlisted || 0
+        }))
       }
     } catch (error) {
       console.error('Failed to load recruiter data:', error)
@@ -126,17 +176,24 @@ const Dashboard = () => {
       return [
         {
           title: 'Upload Resume',
-          description: 'Upload your resume for AI analysis',
+          description: 'Upload your resume for AI analysis & ATS score',
           icon: Upload,
           link: '/upload-resume',
           color: 'bg-blue-500'
         },
         {
-          title: 'View My Resumes',
-          description: 'Manage your uploaded resumes',
-          icon: FileText,
-          link: '/upload-resume',
+          title: 'Find Jobs',
+          description: 'Browse and apply to job openings',
+          icon: Briefcase,
+          link: '/jobs',
           color: 'bg-green-500'
+        },
+        {
+          title: 'My Applications',
+          description: 'Track your job applications',
+          icon: FileText,
+          link: '/my-applications',
+          color: 'bg-purple-500'
         }
       ]
     } else if (isRecruiter) {
@@ -149,11 +206,18 @@ const Dashboard = () => {
           color: 'bg-purple-500'
         },
         {
-          title: 'View Candidates',
-          description: 'Browse and rank candidates',
+          title: 'View Applicants',
+          description: 'Review job applications',
           icon: Users,
-          link: '/candidate-ranking',
+          link: '/recruiter-dashboard',
           color: 'bg-orange-500'
+        },
+        {
+          title: 'My Jobs',
+          description: 'Manage your job postings',
+          icon: FileText,
+          link: '/my-jobs',
+          color: 'bg-blue-500'
         }
       ]
     } else if (isAdmin) {
@@ -188,11 +252,25 @@ const Dashboard = () => {
           bgColor: 'bg-blue-50'
         },
         {
-          title: 'Processed',
+          title: 'AI Analyzed',
           value: stats.processedResumes,
-          icon: Target,
+          icon: CheckCircle,
           color: 'text-green-600',
           bgColor: 'bg-green-50'
+        },
+        {
+          title: 'Applications',
+          value: stats.applications,
+          icon: Briefcase,
+          color: 'text-purple-600',
+          bgColor: 'bg-purple-50'
+        },
+        {
+          title: 'Shortlisted',
+          value: stats.shortlisted,
+          icon: TrendingUp,
+          color: 'text-orange-600',
+          bgColor: 'bg-orange-50'
         }
       ]
     } else if (isRecruiter) {
@@ -205,11 +283,25 @@ const Dashboard = () => {
           bgColor: 'bg-purple-50'
         },
         {
-          title: 'Total Matches',
-          value: stats.matches,
-          icon: Target,
-          color: 'text-orange-600',
-          bgColor: 'bg-orange-50'
+          title: 'Total Applicants',
+          value: stats.totalApplicants,
+          icon: Users,
+          color: 'text-blue-600',
+          bgColor: 'bg-blue-50'
+        },
+        {
+          title: 'Pending Review',
+          value: stats.pending,
+          icon: Clock,
+          color: 'text-yellow-600',
+          bgColor: 'bg-yellow-50'
+        },
+        {
+          title: 'Shortlisted',
+          value: stats.shortlisted,
+          icon: CheckCircle,
+          color: 'text-green-600',
+          bgColor: 'bg-green-50'
         }
       ]
     } else if (isAdmin) {
@@ -231,6 +323,26 @@ const Dashboard = () => {
       ]
     }
     return []
+  }
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Processed':
+      case 'Active':
+      case 'SHORTLISTED':
+      case 'HIRED':
+        return 'bg-green-100 text-green-800'
+      case 'Processing':
+      case 'PENDING':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'REVIEWED':
+        return 'bg-blue-100 text-blue-800'
+      case 'REJECTED':
+      case 'Inactive':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
   }
 
   if (loading) {
@@ -278,24 +390,24 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div>
         <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {getQuickActions().map((action, index) => {
             const Icon = action.icon
             return (
               <Link
                 key={index}
                 to={action.link}
-                className="card hover:shadow-lg transition-shadow duration-200 group"
+                className="card card-hover group"
               >
                 <div className="flex items-center">
-                  <div className={`p-4 rounded-lg ${action.color} text-white group-hover:scale-110 transition-transform duration-200`}>
+                  <div className={`p-4 rounded-xl ${action.color} text-white group-hover:scale-110 transition-transform duration-200`}>
                     <Icon className="h-6 w-6" />
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                       {action.title}
                     </h3>
-                    <p className="text-gray-600">{action.description}</p>
+                    <p className="text-gray-600 text-sm">{action.description}</p>
                   </div>
                 </div>
               </Link>
@@ -314,14 +426,15 @@ const Dashboard = () => {
                 <div key={index} className="flex items-center justify-between py-3 border-b border-gray-200 last:border-b-0">
                   <div className="flex items-center">
                     <div className={`p-2 rounded-lg ${
-                      activity.type === 'resume' ? 'bg-blue-50' : 'bg-purple-50'
+                      activity.type === 'resume' ? 'bg-blue-50' : 
+                      activity.type === 'application' ? 'bg-purple-50' : 'bg-green-50'
                     }`}>
                       {activity.type === 'resume' ? (
-                        <FileText className={`h-4 w-4 ${
-                          activity.type === 'resume' ? 'text-blue-600' : 'text-purple-600'
-                        }`} />
-                      ) : (
+                        <FileText className="h-4 w-4 text-blue-600" />
+                      ) : activity.type === 'application' ? (
                         <Briefcase className="h-4 w-4 text-purple-600" />
+                      ) : (
+                        <Briefcase className="h-4 w-4 text-green-600" />
                       )}
                     </div>
                     <div className="ml-3">
@@ -331,17 +444,34 @@ const Dashboard = () => {
                       </p>
                     </div>
                   </div>
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    activity.status === 'Processed' || activity.status === 'Active'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(activity.status)}`}>
                     {activity.status}
                   </span>
                 </div>
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Tips Section for Candidates */}
+      {isCandidate && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">💡 Tips to Improve Your Job Search</h3>
+          <ul className="space-y-2 text-gray-700">
+            <li className="flex items-start">
+              <CheckCircle className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+              <span>Upload your resume and check your ATS score to improve visibility</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+              <span>Add relevant keywords suggested by AI to match more jobs</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+              <span>Apply to jobs that match your skills for better success rate</span>
+            </li>
+          </ul>
         </div>
       )}
     </div>

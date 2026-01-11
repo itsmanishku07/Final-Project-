@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import { useForm } from 'react-hook-form'
@@ -20,7 +20,7 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm()
 
   // Redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       const from = location.state?.from?.pathname || '/'
       navigate(from, { replace: true })

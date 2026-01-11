@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './contexts/FirebaseAuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
+import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -26,73 +27,74 @@ function App() {
       <Router>
         <div className="min-h-screen bg-gray-50">
           <Navbar />
-          <main className="container mx-auto px-4 py-8">
+          <main>
             <Routes>
               {/* Public Routes */}
+              <Route path="/home" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/jobs" element={<JobSearch />} />
+              <Route path="/jobs" element={<div className="container mx-auto px-4 py-8"><JobSearch /></div>} />
               
               {/* Protected Routes */}
               <Route path="/" element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <div className="container mx-auto px-4 py-8"><Dashboard /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/profile" element={
                 <ProtectedRoute>
-                  <Profile />
+                  <div className="container mx-auto px-4 py-8"><Profile /></div>
                 </ProtectedRoute>
               } />
               
               {/* Candidate Routes */}
               <Route path="/upload-resume" element={
                 <ProtectedRoute allowedRoles={['CANDIDATE', 'ADMIN']}>
-                  <ResumeUpload />
+                  <div className="container mx-auto px-4 py-8"><ResumeUpload /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/my-applications" element={
                 <ProtectedRoute allowedRoles={['CANDIDATE', 'ADMIN']}>
-                  <MyApplications />
+                  <div className="container mx-auto px-4 py-8"><MyApplications /></div>
                 </ProtectedRoute>
               } />
               
               {/* Recruiter Routes */}
               <Route path="/post-job" element={
                 <ProtectedRoute allowedRoles={['RECRUITER', 'ADMIN']}>
-                  <JobPosting />
+                  <div className="container mx-auto px-4 py-8"><JobPosting /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/recruiter-dashboard" element={
                 <ProtectedRoute allowedRoles={['RECRUITER', 'ADMIN']}>
-                  <RecruiterDashboard />
+                  <div className="container mx-auto px-4 py-8"><RecruiterDashboard /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/my-jobs" element={
                 <ProtectedRoute allowedRoles={['RECRUITER', 'ADMIN']}>
-                  <MyJobs />
+                  <div className="container mx-auto px-4 py-8"><MyJobs /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/applications/:jobId" element={
                 <ProtectedRoute allowedRoles={['RECRUITER', 'ADMIN']}>
-                  <JobApplicants />
+                  <div className="container mx-auto px-4 py-8"><JobApplicants /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/candidate-ranking" element={
                 <ProtectedRoute allowedRoles={['RECRUITER', 'ADMIN']}>
-                  <CandidateRanking />
+                  <div className="container mx-auto px-4 py-8"><CandidateRanking /></div>
                 </ProtectedRoute>
               } />
               
               <Route path="/candidate-ranking/:jobId" element={
                 <ProtectedRoute allowedRoles={['RECRUITER', 'ADMIN']}>
-                  <CandidateRanking />
+                  <div className="container mx-auto px-4 py-8"><CandidateRanking /></div>
                 </ProtectedRoute>
               } />
             </Routes>
