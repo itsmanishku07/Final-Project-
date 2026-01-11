@@ -1,0 +1,371 @@
+================================================================================
+        AI-POWERED RESUME SCREENING AND JOB MATCHING SYSTEM
+                        PROJECT ABSTRACT
+================================================================================
+
+PROJECT TITLE:
+AI-Powered Resume Screening and Job Matching System
+
+SUBMITTED BY:
+MCA Final Year Project
+
+--------------------------------------------------------------------------------
+                              ABSTRACT
+--------------------------------------------------------------------------------
+
+The AI-Powered Resume Screening and Job Matching System is a comprehensive 
+web-based application designed to revolutionize the traditional recruitment 
+process by leveraging artificial intelligence and machine learning technologies. 
+This system addresses the challenges faced by both job seekers and recruiters 
+in the modern job market by automating resume analysis, providing ATS 
+(Applicant Tracking System) compatibility scores, and intelligently matching 
+candidates with suitable job opportunities.
+
+The primary objective of this project is to streamline the hiring process by 
+reducing manual effort in resume screening while improving the accuracy of 
+candidate-job matching. The system extracts key information from resumes 
+including skills, experience, and education using AI-powered text analysis, 
+then compares these attributes against job requirements to generate match scores.
+
+For job seekers, the platform offers valuable insights into their resume's 
+effectiveness through detailed ATS scoring, spelling error detection, missing 
+section identification, and keyword suggestions to improve visibility to 
+recruiters. For recruiters, the system provides automated candidate ranking, 
+application management, and comprehensive dashboards to track hiring progress.
+
+--------------------------------------------------------------------------------
+                           KEY FEATURES
+--------------------------------------------------------------------------------
+
+FOR CANDIDATES:
+- Resume upload and AI-powered analysis (PDF/DOCX support)
+- Comprehensive ATS (Applicant Tracking System) compatibility score
+- Detailed score breakdown across 6 categories:
+  * Contact Information (10 points)
+  * Section Structure (20 points)
+  * Keywords & Skills (25 points)
+  * Experience Details (20 points)
+  * Quantifiable Achievements (15 points)
+  * Formatting & Readability (10 points)
+- Spelling error detection with suggestions
+- Missing section identification
+- Industry keyword recommendations
+- Job search and application tracking
+- Application status monitoring (Pending, Reviewed, Shortlisted, Hired)
+
+FOR RECRUITERS:
+- Job posting and management
+- Automated candidate screening and ranking
+- AI-powered resume-job matching with similarity scores
+- Applicant dashboard with statistics
+- Application status management
+- Candidate skill gap analysis
+
+GENERAL FEATURES:
+- Role-based access control (Candidate, Recruiter, Admin)
+- Google OAuth and Email/Password authentication
+- Real-time notifications
+- Responsive design for all devices
+- Professional landing page
+
+--------------------------------------------------------------------------------
+                          TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+
+FRONTEND:
+- React.js 18.x - Modern JavaScript library for building user interfaces
+- Vite - Next-generation frontend build tool
+- Tailwind CSS - Utility-first CSS framework for styling
+- React Router DOM - Client-side routing
+- React Hook Form - Form validation and handling
+- React Hot Toast - Toast notifications
+- Lucide React - Icon library
+- Axios - HTTP client for API requests
+
+BACKEND:
+- Python 3.x - Primary programming language
+- Flask - Lightweight WSGI web application framework
+- Flask-CORS - Cross-Origin Resource Sharing support
+- PyPDF2 - PDF text extraction
+- python-docx - DOCX file processing
+- Firebase Admin SDK - Server-side Firebase integration
+
+DATABASE & AUTHENTICATION:
+- Firebase Firestore - NoSQL cloud database
+- Firebase Authentication - User authentication service
+- Google OAuth 2.0 - Social login integration
+
+AI/ML COMPONENTS:
+- Databricks AI (Optional) - External AI model integration
+- Rule-based NLP - Skill extraction and matching algorithms
+- Regex Pattern Matching - Experience and education detection
+- Keyword Analysis - ATS scoring and suggestions
+
+CLOUD SERVICES:
+- Firebase - Backend-as-a-Service platform
+- Google Cloud Platform - Cloud infrastructure
+
+DEVELOPMENT TOOLS:
+- Git - Version control
+- npm/Node.js - Package management
+- Python pip - Python package management
+
+--------------------------------------------------------------------------------
+                        SYSTEM ARCHITECTURE
+--------------------------------------------------------------------------------
+
+The system follows a modern three-tier architecture:
+
+1. PRESENTATION LAYER (Frontend)
+   - Single Page Application (SPA) built with React
+   - Component-based architecture
+   - Context API for state management
+   - Protected routes with role-based access
+
+2. APPLICATION LAYER (Backend)
+   - RESTful API design
+   - Clean layered architecture:
+     * Routes (API endpoints)
+     * Services (Business logic)
+     * Repositories (Data access)
+     * Models (Data structures)
+   - JWT token-based authentication
+   - File processing services
+
+3. DATA LAYER (Database)
+   - Firebase Firestore collections:
+     * users - User profiles and authentication data
+     * resumes - Resume metadata and AI analysis results
+     * jobs - Job postings and requirements
+     * applications - Job applications and status
+     * matches - Resume-job matching scores
+
+--------------------------------------------------------------------------------
+                         API ENDPOINTS
+--------------------------------------------------------------------------------
+
+AUTHENTICATION:
+- POST /api/auth/register - User registration
+- POST /api/auth/login - User login
+- POST /api/auth/google - Google OAuth login
+- GET  /api/auth/profile - Get user profile
+- PUT  /api/auth/profile - Update user profile
+
+RESUMES:
+- POST /api/resumes/upload - Upload resume
+- GET  /api/resumes/my-resumes - Get user's resumes
+- GET  /api/resumes/<id> - Get resume details
+- GET  /api/resumes/<id>/suggestions - Get AI suggestions
+- DELETE /api/resumes/<id> - Delete resume
+
+JOBS:
+- POST /api/jobs - Create job posting
+- GET  /api/jobs - Get all active jobs
+- GET  /api/jobs/<id> - Get job details
+- PUT  /api/jobs/<id> - Update job
+- DELETE /api/jobs/<id> - Delete job
+- GET  /api/jobs/my-jobs - Get recruiter's jobs
+- GET  /api/jobs/companies - Get companies list
+
+APPLICATIONS:
+- POST /api/applications/apply - Apply to job
+- GET  /api/applications/my-applications - Get candidate's applications
+- GET  /api/applications/job/<id> - Get job applications (recruiter)
+- PUT  /api/applications/<id>/status - Update application status
+- GET  /api/applications/dashboard - Get recruiter dashboard
+
+MATCHING:
+- POST /api/matches/job/<id>/match-all - Match resumes to job
+
+--------------------------------------------------------------------------------
+                      ATS SCORING ALGORITHM
+--------------------------------------------------------------------------------
+
+The ATS (Applicant Tracking System) scoring algorithm evaluates resumes 
+across six key categories:
+
+1. CONTACT INFORMATION (10 points max)
+   - Email address: 3 points
+   - Phone number: 3 points
+   - LinkedIn profile: 2 points
+   - Portfolio/GitHub: 2 points
+
+2. SECTION STRUCTURE (20 points max)
+   - Summary/Objective: 4 points
+   - Work Experience: 5 points
+   - Education: 4 points
+   - Skills: 4 points
+   - Projects: 3 points
+
+3. KEYWORDS & SKILLS (25 points max)
+   - High-value technical keywords: 2 points each
+   - Medium-value keywords: 1 point each
+   - Covers 50+ industry-standard skills
+
+4. EXPERIENCE DETAILS (20 points max)
+   - Employment dates: 5 points
+   - Job titles: 5 points
+   - Company names: 5 points
+   - Action verbs: 5 points
+
+5. QUANTIFIABLE ACHIEVEMENTS (15 points max)
+   - Percentage metrics: 5 points
+   - Dollar amounts/numbers: 5 points
+   - Time-based improvements: 5 points
+
+6. FORMATTING & READABILITY (10 points max)
+   - Optimal length (400-1500 words): 4 points
+   - Bullet points usage: 3 points
+   - Proper formatting: 3 points
+
+GRADING SCALE:
+- A (85-100): Excellent - Highly ATS optimized
+- B (70-84): Good - Well optimized for ATS
+- C (55-69): Average - May pass basic ATS
+- D (40-54): Below Average - Likely filtered out
+- F (0-39): Poor - Will likely fail ATS screening
+
+--------------------------------------------------------------------------------
+                         PROJECT STRUCTURE
+--------------------------------------------------------------------------------
+
+ai-resume-screening/
+├── backend-flask/
+│   ├── config/
+│   │   ├── firebase_config.py
+│   │   └── firestore_rest.py
+│   ├── models/
+│   │   ├── user.py
+│   │   ├── resume.py
+│   │   ├── job.py
+│   │   └── application.py
+│   ├── repositories/
+│   │   ├── base_repository.py
+│   │   ├── user_repository.py
+│   │   ├── resume_repository.py
+│   │   ├── job_repository.py
+│   │   └── application_repository.py
+│   ├── routes/
+│   │   ├── auth_routes.py
+│   │   ├── resume_routes.py
+│   │   ├── job_routes.py
+│   │   ├── application_routes.py
+│   │   └── match_routes.py
+│   ├── services/
+│   │   ├── ai_service.py
+│   │   └── file_service.py
+│   ├── utils/
+│   │   └── auth_utils.py
+│   ├── app.py
+│   ├── run.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── LoadingSpinner.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── NotificationBell.jsx
+│   │   │   ├── StatsCard.jsx
+│   │   │   └── EmptyState.jsx
+│   │   ├── contexts/
+│   │   │   └── FirebaseAuthContext.jsx
+│   │   ├── pages/
+│   │   │   ├── LandingPage.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── ResumeUpload.jsx
+│   │   │   ├── JobSearch.jsx
+│   │   │   ├── JobPosting.jsx
+│   │   │   ├── MyJobs.jsx
+│   │   │   ├── MyApplications.jsx
+│   │   │   ├── RecruiterDashboard.jsx
+│   │   │   ├── JobApplicants.jsx
+│   │   │   └── CandidateRanking.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── firestore-rules/
+│   └── firestore.rules
+│
+├── docs/
+│   ├── API_DOCUMENTATION.md
+│   ├── ARCHITECTURE_DECISIONS.md
+│   └── DEPLOYMENT_GUIDE.md
+│
+└── README.md
+
+--------------------------------------------------------------------------------
+                      INSTALLATION & SETUP
+--------------------------------------------------------------------------------
+
+PREREQUISITES:
+- Node.js 18.x or higher
+- Python 3.9 or higher
+- Firebase account with Firestore enabled
+- Git
+
+BACKEND SETUP:
+1. Navigate to backend-flask directory
+2. Create virtual environment: python -m venv venv
+3. Activate virtual environment: venv\Scripts\activate (Windows)
+4. Install dependencies: pip install -r requirements.txt
+5. Configure Firebase credentials in firebase-service-account.json
+6. Set environment variables in .env file
+7. Run server: python run.py
+
+FRONTEND SETUP:
+1. Navigate to frontend directory
+2. Install dependencies: npm install
+3. Configure Firebase in .env file
+4. Run development server: npm run dev
+
+--------------------------------------------------------------------------------
+                          FUTURE SCOPE
+--------------------------------------------------------------------------------
+
+1. Integration with LinkedIn for profile import
+2. Video interview scheduling and analysis
+3. Advanced ML models for better matching accuracy
+4. Multi-language resume support
+5. Mobile application development
+6. Integration with popular job boards
+7. Advanced analytics and reporting
+8. Chatbot for candidate queries
+9. Automated interview question generation
+10. Salary prediction based on skills and experience
+
+--------------------------------------------------------------------------------
+                          CONCLUSION
+--------------------------------------------------------------------------------
+
+The AI-Powered Resume Screening and Job Matching System successfully 
+demonstrates the application of artificial intelligence in streamlining 
+the recruitment process. By automating resume analysis and providing 
+intelligent matching capabilities, the system significantly reduces the 
+time and effort required in traditional hiring processes while improving 
+the quality of candidate-job matches.
+
+The comprehensive ATS scoring feature empowers job seekers to optimize 
+their resumes for better visibility, while recruiters benefit from 
+automated screening and ranking of candidates. The modern, responsive 
+user interface ensures a seamless experience across all devices.
+
+This project showcases the practical implementation of various technologies 
+including React.js, Flask, Firebase, and AI/ML algorithms, making it a 
+valuable learning experience and a functional solution for real-world 
+recruitment challenges.
+
+================================================================================
+                    © 2026 AI Resume - MCA Final Year Project
+================================================================================

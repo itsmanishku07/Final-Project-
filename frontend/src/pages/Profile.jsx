@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import api from '../services/api'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { User, Mail, Shield, Calendar, Clock, Download, Key, Trash2, CheckCircle } from 'lucide-react'
 
 /**
  * Profile Page

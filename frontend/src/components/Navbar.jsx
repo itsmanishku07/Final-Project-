@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/FirebaseAuthContext'
-import { Menu, X, User, LogOut, Upload, Briefcase, BarChart3, Search, FileText, Users } from 'lucide-react'
+import { Menu, X, User, LogOut, Upload, Briefcase, BarChart3, Search, FileText, Users, Home } from 'lucide-react'
+import NotificationBell from './NotificationBell'
 
 /**
  * Navigation bar component with role-based menu items
@@ -25,6 +26,12 @@ const Navbar = () => {
 
   const navItems = [
     {
+      name: 'Home',
+      path: '/home',
+      icon: Home,
+      show: !isAuthenticated
+    },
+    {
       name: 'Dashboard',
       path: '/',
       icon: BarChart3,
@@ -34,7 +41,7 @@ const Navbar = () => {
       name: 'Find Jobs',
       path: '/jobs',
       icon: Search,
-      show: isCandidate || (!isAuthenticated) // Only for candidates or not logged in
+      show: isCandidate || (!isAuthenticated)
     },
     {
       name: 'Upload Resume',
@@ -103,7 +110,9 @@ const Navbar = () => {
                 })}
                 
                 {/* User Menu */}
-                <div className="flex items-center space-x-4 ml-6 pl-6 border-l border-gray-200">
+                <div className="flex items-center space-x-2 ml-6 pl-6 border-l border-gray-200">
+                  <NotificationBell />
+                  
                   <Link
                     to="/profile"
                     className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
