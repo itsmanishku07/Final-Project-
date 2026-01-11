@@ -9,6 +9,7 @@ import requests
 import json
 import time
 import random
+import re
 from typing import List, Dict, Any
 from abc import ABC, abstractmethod
 
@@ -39,6 +40,33 @@ class AIAnalysisResponse:
             'reasoning': self.reasoning
         }
 
+
+class ResumeSuggestions:
+    """Resume improvement suggestions structure with ATS scoring"""
+    
+    def __init__(self, spelling_errors: List[Dict], missing_sections: List[str],
+                 keyword_suggestions: List[str], formatting_tips: List[str],
+                 overall_score: int, summary: str, ats_score: Dict = None):
+        self.spelling_errors = spelling_errors
+        self.missing_sections = missing_sections
+        self.keyword_suggestions = keyword_suggestions
+        self.formatting_tips = formatting_tips
+        self.overall_score = overall_score
+        self.summary = summary
+        self.ats_score = ats_score or {}
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'spelling_errors': self.spelling_errors,
+            'missing_sections': self.missing_sections,
+            'keyword_suggestions': self.keyword_suggestions,
+            'formatting_tips': self.formatting_tips,
+            'overall_score': self.overall_score,
+            'summary': self.summary,
+            'ats_score': self.ats_score
+        }
+
+
 class AIAnalysisInterface(ABC):
     """Abstract interface for AI analysis services"""
     
@@ -51,6 +79,11 @@ class AIAnalysisInterface(ABC):
     def analyze_resume_for_job(self, resume_text: str, job_description: str, 
                               required_skills: List[str]) -> AIAnalysisResponse:
         """Analyze resume for a specific job"""
+        pass
+    
+    @abstractmethod
+    def get_resume_suggestions(self, resume_text: str) -> ResumeSuggestions:
+        """Get AI-powered suggestions to improve resume"""
         pass
 
 class DemoAIAnalysisService(AIAnalysisInterface):
@@ -184,6 +217,217 @@ class DemoAIAnalysisService(AIAnalysisInterface):
             return "Associate Degree"
         else:
             return "High School"
+    
+    def get_resume_suggestions(self, resume_text: str) -> ResumeSuggestions:
+        """Get mock resume improvement suggestions with ATS score"""
+        logger.info("Demo: Generating resume suggestions with ATS score")
+        time.sleep(1)
+        
+        # Calculate ATS score using the same logic as production
+        ats_score = self._calculate_ats_score(resume_text)
+        
+        return ResumeSuggestions(
+            spelling_errors=[],
+            missing_sections=['Professional Summary', 'Certifications'],
+            keyword_suggestions=['Docker', 'Kubernetes', 'AWS', 'CI/CD'],
+            formatting_tips=['Use bullet points for achievements', 'Add quantifiable metrics'],
+            overall_score=ats_score['total_score'],
+            summary="Your resume is good but could be improved with more keywords and a professional summary.",
+            ats_score=ats_score
+        )
+    
+    def _calculate_ats_score(self, resume_text: str) -> Dict:
+        """Calculate comprehensive ATS score"""
+        text_lower = resume_text.lower()
+        
+        # 1. Contact Information Score (10 points)
+        contact_score = 0
+        contact_details = []
+        if re.search(r'[\w\.-]+@[\w\.-]+\.\w+', resume_text):
+            contact_score += 3
+            contact_details.append('Email found')
+        if re.search(r'(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}', resume_text):
+            contact_score += 3
+            contact_details.append('Phone found')
+        if 'linkedin' in text_lower:
+            contact_score += 2
+            contact_details.append('LinkedIn found')
+        if re.search(r'github|portfolio|website', text_lower):
+            contact_score += 2
+            contact_details.append('Portfolio/GitHub found')
+        
+        # 2. Section Structure Score (20 points)
+        section_score = 0
+        sections_found = []
+        section_checks = {
+            'Summary/Objective': ['summary', 'objective', 'profile', 'about'],
+            'Experience': ['experience', 'employment', 'work history', 'professional experience'],
+            'Education': ['education', 'academic', 'qualification'],
+            'Skills': ['skills', 'technical skills', 'competencies', 'expertise'],
+            'Projects': ['project', 'portfolio']
+        }
+        
+        for section, keywords in section_checks.items():
+            if any(kw in text_lower for kw in keywords):
+                section_score += 4
+                sections_found.append(section)
+        
+        # 3. Keywords & Skills Score (25 points)
+        keyword_score = 0
+        skills_found = []
+        technical_keywords = [
+            'python', 'java', 'javascript', 'react', 'angular', 'node', 'sql', 'aws',
+            'docker', 'kubernetes', 'git', 'agile', 'scrum', 'api', 'database',
+            'machine learning', 'data', 'cloud', 'devops', 'ci/cd', 'linux',
+            'html', 'css', 'typescript', 'mongodb', 'postgresql', 'redis'
+        ]
+        
+        for keyword in technical_keywords:
+            if keyword in text_lower:
+                keyword_score += 1
+                skills_found.append(keyword.title())
+        keyword_score = min(keyword_score, 25)
+        
+        # 4. Experience Details Score (20 points)
+        experience_score = 0
+        experience_details = []
+        
+        # Check for dates (employment history)
+        date_patterns = [
+            r'\b(19|20)\d{2}\b',
+            r'\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s*\d{4}\b',
+            r'\b\d{1,2}/\d{4}\b'
+        ]
+        dates_found = sum(1 for pattern in date_patterns if re.search(pattern, text_lower))
+        if dates_found > 0:
+            experience_score += 5
+            experience_details.append('Employment dates present')
+        
+        # Check for job titles
+        job_titles = ['developer', 'engineer', 'manager', 'analyst', 'designer', 'lead', 
+                     'architect', 'consultant', 'specialist', 'coordinator', 'director']
+        if any(title in text_lower for title in job_titles):
+            experience_score += 5
+            experience_details.append('Job titles found')
+        
+        # Check for company names (capitalized words near experience section)
+        if re.search(r'(at|@)\s+[A-Z][a-zA-Z]+', resume_text):
+            experience_score += 5
+            experience_details.append('Company names found')
+        
+        # Check for responsibilities/achievements
+        action_verbs = ['developed', 'managed', 'led', 'created', 'implemented', 'designed',
+                       'built', 'improved', 'increased', 'reduced', 'achieved', 'delivered']
+        verbs_found = sum(1 for verb in action_verbs if verb in text_lower)
+        if verbs_found >= 3:
+            experience_score += 5
+            experience_details.append(f'{verbs_found} action verbs used')
+        
+        # 5. Quantifiable Achievements Score (15 points)
+        achievement_score = 0
+        achievements = []
+        
+        # Check for percentages
+        percentages = re.findall(r'\d+%', resume_text)
+        if percentages:
+            achievement_score += 5
+            achievements.append(f'{len(percentages)} percentage metrics')
+        
+        # Check for numbers/metrics
+        metrics = re.findall(r'\$[\d,]+|\d+\s*(users|customers|clients|projects|team members|employees)', text_lower)
+        if metrics:
+            achievement_score += 5
+            achievements.append(f'{len(metrics)} quantified results')
+        
+        # Check for time-based achievements
+        time_metrics = re.findall(r'\d+\s*(years?|months?|weeks?|days?|hours?)', text_lower)
+        if time_metrics:
+            achievement_score += 5
+            achievements.append('Time-based metrics found')
+        
+        # 6. Formatting & Readability Score (10 points)
+        format_score = 0
+        format_details = []
+        
+        # Check resume length (ideal: 400-2000 words)
+        word_count = len(resume_text.split())
+        if 400 <= word_count <= 2000:
+            format_score += 4
+            format_details.append(f'Good length ({word_count} words)')
+        elif 200 <= word_count < 400 or 2000 < word_count <= 3000:
+            format_score += 2
+            format_details.append(f'Acceptable length ({word_count} words)')
+        
+        # Check for bullet points
+        bullet_count = resume_text.count('•') + resume_text.count('●') + text_lower.count('- ')
+        if bullet_count >= 5:
+            format_score += 3
+            format_details.append(f'{bullet_count} bullet points')
+        
+        # Check for proper capitalization
+        sentences = re.split(r'[.!?]', resume_text)
+        proper_caps = sum(1 for s in sentences if s.strip() and s.strip()[0].isupper())
+        if proper_caps > len(sentences) * 0.7:
+            format_score += 3
+            format_details.append('Proper capitalization')
+        
+        # Calculate total score
+        total_score = contact_score + section_score + keyword_score + experience_score + achievement_score + format_score
+        
+        # Determine grade
+        if total_score >= 85:
+            grade = 'A'
+            grade_description = 'Excellent - Highly ATS optimized'
+        elif total_score >= 70:
+            grade = 'B'
+            grade_description = 'Good - Well optimized for ATS'
+        elif total_score >= 55:
+            grade = 'C'
+            grade_description = 'Average - Needs improvement'
+        elif total_score >= 40:
+            grade = 'D'
+            grade_description = 'Below Average - Significant improvements needed'
+        else:
+            grade = 'F'
+            grade_description = 'Poor - Major revisions required'
+        
+        return {
+            'total_score': total_score,
+            'grade': grade,
+            'grade_description': grade_description,
+            'breakdown': {
+                'contact_info': {
+                    'score': contact_score,
+                    'max': 10,
+                    'details': contact_details
+                },
+                'section_structure': {
+                    'score': section_score,
+                    'max': 20,
+                    'details': sections_found
+                },
+                'keywords_skills': {
+                    'score': keyword_score,
+                    'max': 25,
+                    'details': skills_found[:10]
+                },
+                'experience_details': {
+                    'score': experience_score,
+                    'max': 20,
+                    'details': experience_details
+                },
+                'quantifiable_achievements': {
+                    'score': achievement_score,
+                    'max': 15,
+                    'details': achievements
+                },
+                'formatting': {
+                    'score': format_score,
+                    'max': 10,
+                    'details': format_details
+                }
+            }
+        }
 
 class ProductionAIAnalysisService(AIAnalysisInterface):
     """Production AI service - uses smart rule-based analysis"""
@@ -377,6 +621,493 @@ class ProductionAIAnalysisService(AIAnalysisInterface):
             return "Associate Degree"
         
         return "Bachelor's Degree"  # Default assumption
+    
+    def get_resume_suggestions(self, resume_text: str) -> ResumeSuggestions:
+        """Get AI-powered resume suggestions using Databricks"""
+        logger.info("Getting resume suggestions from Databricks AI")
+        
+        # Try Databricks API first
+        if self.api_url and self.token:
+            try:
+                suggestions = self._get_databricks_suggestions(resume_text)
+                if suggestions:
+                    return suggestions
+            except Exception as e:
+                logger.warning(f"Databricks API failed, using fallback: {e}")
+        
+        # Fallback to smart rule-based suggestions
+        return self._get_rule_based_suggestions(resume_text)
+    
+    def _get_databricks_suggestions(self, resume_text: str) -> ResumeSuggestions:
+        """Call Databricks AI for resume suggestions"""
+        # Always calculate ATS score locally for accuracy
+        ats_score = self._calculate_ats_score(resume_text)
+        
+        prompt = f"""Analyze this resume and provide improvement suggestions in JSON format:
+
+Resume:
+{resume_text[:3000]}
+
+Respond with ONLY valid JSON in this exact format:
+{{
+    "spelling_errors": [{{"word": "misspelled", "suggestion": "correct", "context": "sentence with error"}}],
+    "missing_sections": ["section names that should be added"],
+    "keyword_suggestions": ["industry keywords to add"],
+    "formatting_tips": ["specific formatting improvements"],
+    "overall_score": 75,
+    "summary": "Brief overall assessment"
+}}"""
+
+        headers = {
+            'Authorization': f'Bearer {self.token}',
+            'Content-Type': 'application/json'
+        }
+        
+        payload = {
+            'messages': [
+                {'role': 'system', 'content': 'You are a professional resume reviewer. Analyze resumes and provide actionable improvement suggestions. Always respond with valid JSON only.'},
+                {'role': 'user', 'content': prompt}
+            ],
+            'max_tokens': 1500,
+            'temperature': 0.3
+        }
+        
+        url = f"{self.api_url}{self.model_endpoint}/invocations"
+        response = requests.post(url, headers=headers, json=payload, timeout=30)
+        response.raise_for_status()
+        
+        result = response.json()
+        content = result.get('choices', [{}])[0].get('message', {}).get('content', '{}')
+        
+        # Parse JSON from response
+        try:
+            # Clean up response - extract JSON if wrapped in markdown
+            if '```json' in content:
+                content = content.split('```json')[1].split('```')[0]
+            elif '```' in content:
+                content = content.split('```')[1].split('```')[0]
+            
+            data = json.loads(content.strip())
+            
+            return ResumeSuggestions(
+                spelling_errors=data.get('spelling_errors', []),
+                missing_sections=data.get('missing_sections', []),
+                keyword_suggestions=data.get('keyword_suggestions', []),
+                formatting_tips=data.get('formatting_tips', []),
+                overall_score=ats_score['total_score'],  # Use calculated ATS score
+                summary=data.get('summary', 'Resume analyzed successfully.'),
+                ats_score=ats_score  # Include full ATS score breakdown
+            )
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse Databricks response: {e}")
+            raise
+    
+    def _get_rule_based_suggestions(self, resume_text: str) -> ResumeSuggestions:
+        """Generate suggestions using smart rule-based analysis with ATS scoring"""
+        text_lower = resume_text.lower()
+        
+        # Calculate comprehensive ATS score
+        ats_score = self._calculate_ats_score(resume_text)
+        
+        # Check for common spelling errors
+        spelling_errors = self._check_spelling(resume_text)
+        
+        # Check for missing sections
+        missing_sections = []
+        section_keywords = {
+            'Professional Summary': ['summary', 'objective', 'profile', 'about me'],
+            'Work Experience': ['experience', 'employment', 'work history'],
+            'Education': ['education', 'academic', 'degree', 'university', 'college'],
+            'Skills': ['skills', 'technical skills', 'competencies'],
+            'Certifications': ['certification', 'certified', 'certificate'],
+            'Projects': ['project', 'portfolio'],
+            'Contact Information': ['email', 'phone', 'linkedin', 'address']
+        }
+        
+        for section, keywords in section_keywords.items():
+            if not any(kw in text_lower for kw in keywords):
+                missing_sections.append(section)
+        
+        # Suggest trending keywords based on what's missing
+        keyword_suggestions = []
+        trending_keywords = [
+            'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'CI/CD', 'DevOps',
+            'Machine Learning', 'Data Science', 'Python', 'JavaScript', 'React',
+            'Node.js', 'Microservices', 'REST API', 'Agile', 'Scrum',
+            'Git', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'Redis',
+            'TensorFlow', 'PyTorch', 'Deep Learning', 'NLP', 'Computer Vision'
+        ]
+        
+        for keyword in trending_keywords:
+            if keyword.lower() not in text_lower:
+                keyword_suggestions.append(keyword)
+        keyword_suggestions = keyword_suggestions[:8]
+        
+        # Formatting tips based on ATS analysis
+        formatting_tips = []
+        
+        if ats_score['breakdown']['contact_info']['score'] < 6:
+            formatting_tips.append("Add complete contact information: email, phone, and LinkedIn profile.")
+        
+        if ats_score['breakdown']['section_structure']['score'] < 12:
+            formatting_tips.append("Include all essential sections: Summary, Experience, Education, and Skills.")
+        
+        if ats_score['breakdown']['keywords_skills']['score'] < 15:
+            formatting_tips.append("Add more industry-relevant technical keywords and skills.")
+        
+        if ats_score['breakdown']['experience_details']['score'] < 10:
+            formatting_tips.append("Use strong action verbs and include specific job titles and company names.")
+        
+        if ats_score['breakdown']['quantifiable_achievements']['score'] < 8:
+            formatting_tips.append("Add quantifiable achievements (e.g., 'Increased sales by 25%', 'Managed team of 10').")
+        
+        if ats_score['breakdown']['formatting']['score'] < 6:
+            formatting_tips.append("Improve formatting with bullet points and proper structure.")
+        
+        # Additional tips
+        if len(resume_text) < 500:
+            formatting_tips.append("Resume appears too short. Add more details about your experience.")
+        elif len(resume_text) > 5000:
+            formatting_tips.append("Resume may be too long. Consider condensing to 1-2 pages.")
+        
+        if '@' not in resume_text:
+            formatting_tips.append("Ensure your email address is clearly visible.")
+        
+        if not re.search(r'linkedin\.com|github\.com', text_lower):
+            formatting_tips.append("Consider adding LinkedIn or GitHub profile links.")
+        
+        # Generate summary based on ATS score
+        total = ats_score['total_score']
+        if total >= 85:
+            summary = f"Excellent resume! Your ATS score of {total}/100 indicates strong optimization. Minor tweaks suggested."
+        elif total >= 70:
+            summary = f"Good resume with ATS score of {total}/100. Some improvements can boost your visibility to recruiters."
+        elif total >= 55:
+            summary = f"Average ATS score of {total}/100. Focus on adding keywords, metrics, and improving structure."
+        elif total >= 40:
+            summary = f"Below average ATS score of {total}/100. Significant improvements needed in multiple areas."
+        else:
+            summary = f"Low ATS score of {total}/100. Major revisions required to pass ATS screening."
+        
+        return ResumeSuggestions(
+            spelling_errors=spelling_errors,
+            missing_sections=missing_sections,
+            keyword_suggestions=keyword_suggestions,
+            formatting_tips=formatting_tips,
+            overall_score=total,
+            summary=summary,
+            ats_score=ats_score
+        )
+    
+    def _calculate_ats_score(self, resume_text: str) -> Dict:
+        """Calculate comprehensive ATS (Applicant Tracking System) score
+        
+        ATS Score Breakdown (100 points total):
+        - Contact Information: 10 points
+        - Section Structure: 20 points  
+        - Keywords & Skills: 25 points
+        - Experience Details: 20 points
+        - Quantifiable Achievements: 15 points
+        - Formatting & Readability: 10 points
+        """
+        text_lower = resume_text.lower()
+        
+        # 1. Contact Information Score (10 points)
+        contact_score = 0
+        contact_details = []
+        
+        # Email (3 points)
+        if re.search(r'[\w\.-]+@[\w\.-]+\.\w+', resume_text):
+            contact_score += 3
+            contact_details.append('Email found')
+        else:
+            contact_details.append('Missing email')
+        
+        # Phone (3 points)
+        if re.search(r'(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\+\d{10,12}', resume_text):
+            contact_score += 3
+            contact_details.append('Phone found')
+        else:
+            contact_details.append('Missing phone')
+        
+        # LinkedIn (2 points)
+        if 'linkedin' in text_lower:
+            contact_score += 2
+            contact_details.append('LinkedIn found')
+        
+        # Portfolio/GitHub (2 points)
+        if re.search(r'github|portfolio|website|\.com', text_lower):
+            contact_score += 2
+            contact_details.append('Portfolio/Website found')
+        
+        # 2. Section Structure Score (20 points)
+        section_score = 0
+        sections_found = []
+        sections_missing = []
+        
+        section_checks = {
+            'Summary/Objective': (['summary', 'objective', 'profile', 'about', 'overview'], 4),
+            'Work Experience': (['experience', 'employment', 'work history', 'professional experience', 'career'], 5),
+            'Education': (['education', 'academic', 'qualification', 'degree', 'university', 'college'], 4),
+            'Skills': (['skills', 'technical skills', 'competencies', 'expertise', 'technologies'], 4),
+            'Projects': (['project', 'portfolio', 'achievements'], 3)
+        }
+        
+        for section, (keywords, points) in section_checks.items():
+            if any(kw in text_lower for kw in keywords):
+                section_score += points
+                sections_found.append(section)
+            else:
+                sections_missing.append(section)
+        
+        # 3. Keywords & Skills Score (25 points)
+        keyword_score = 0
+        skills_found = []
+        
+        # Technical skills (weighted by importance)
+        high_value_keywords = {
+            'python': 2, 'java': 2, 'javascript': 2, 'react': 2, 'angular': 2,
+            'node.js': 2, 'sql': 2, 'aws': 2, 'docker': 2, 'kubernetes': 2,
+            'machine learning': 2, 'data science': 2, 'devops': 2
+        }
+        
+        medium_value_keywords = {
+            'git': 1, 'agile': 1, 'scrum': 1, 'api': 1, 'rest': 1,
+            'mongodb': 1, 'postgresql': 1, 'redis': 1, 'linux': 1,
+            'html': 1, 'css': 1, 'typescript': 1, 'ci/cd': 1,
+            'azure': 1, 'gcp': 1, 'tensorflow': 1, 'pytorch': 1
+        }
+        
+        for keyword, points in high_value_keywords.items():
+            if keyword in text_lower:
+                keyword_score += points
+                skills_found.append(keyword.title())
+        
+        for keyword, points in medium_value_keywords.items():
+            if keyword in text_lower:
+                keyword_score += points
+                skills_found.append(keyword.title())
+        
+        keyword_score = min(keyword_score, 25)
+        
+        # 4. Experience Details Score (20 points)
+        experience_score = 0
+        experience_details = []
+        
+        # Employment dates (5 points)
+        date_patterns = [
+            r'\b(19|20)\d{2}\s*[-–]\s*(19|20)?\d{2}|present|current\b',
+            r'\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[\s,]+\d{4}\b',
+            r'\b\d{1,2}/\d{4}\b'
+        ]
+        dates_found = sum(1 for pattern in date_patterns if re.search(pattern, text_lower))
+        if dates_found > 0:
+            experience_score += 5
+            experience_details.append('Employment dates present')
+        else:
+            experience_details.append('Missing employment dates')
+        
+        # Job titles (5 points)
+        job_titles = ['developer', 'engineer', 'manager', 'analyst', 'designer', 'lead', 
+                     'architect', 'consultant', 'specialist', 'coordinator', 'director',
+                     'intern', 'associate', 'senior', 'junior', 'principal']
+        titles_found = [t for t in job_titles if t in text_lower]
+        if titles_found:
+            experience_score += 5
+            experience_details.append(f'Job titles: {", ".join(titles_found[:3])}')
+        else:
+            experience_details.append('Missing clear job titles')
+        
+        # Company context (5 points)
+        if re.search(r'(at|@|for)\s+[A-Z][a-zA-Z\s]+|inc\.|ltd\.|llc|corp', text_lower):
+            experience_score += 5
+            experience_details.append('Company names found')
+        
+        # Action verbs (5 points)
+        action_verbs = ['developed', 'managed', 'led', 'created', 'implemented', 'designed',
+                       'built', 'improved', 'increased', 'reduced', 'achieved', 'delivered',
+                       'launched', 'optimized', 'streamlined', 'coordinated', 'executed']
+        verbs_found = [v for v in action_verbs if v in text_lower]
+        if len(verbs_found) >= 3:
+            experience_score += 5
+            experience_details.append(f'{len(verbs_found)} action verbs used')
+        elif len(verbs_found) >= 1:
+            experience_score += 2
+            experience_details.append(f'Only {len(verbs_found)} action verbs - add more')
+        else:
+            experience_details.append('Missing action verbs')
+        
+        # 5. Quantifiable Achievements Score (15 points)
+        achievement_score = 0
+        achievements = []
+        
+        # Percentages (5 points)
+        percentages = re.findall(r'\d+%', resume_text)
+        if percentages:
+            achievement_score += 5
+            achievements.append(f'{len(percentages)} percentage metrics found')
+        
+        # Dollar amounts or numbers (5 points)
+        metrics = re.findall(r'\$[\d,]+[KMB]?|\d+[KMB]\+?|\d+\s*(users|customers|clients|projects|team|members|employees|revenue)', text_lower)
+        if metrics:
+            achievement_score += 5
+            achievements.append(f'{len(metrics)} quantified results')
+        
+        # Time-based achievements (5 points)
+        time_metrics = re.findall(r'(\d+)\s*(years?|months?|weeks?)\s*(ahead|early|faster|reduction)', text_lower)
+        if time_metrics:
+            achievement_score += 5
+            achievements.append('Time-based improvements found')
+        elif re.search(r'\d+\s*x\s*(faster|improvement|increase)', text_lower):
+            achievement_score += 3
+            achievements.append('Multiplier metrics found')
+        
+        if not achievements:
+            achievements.append('No quantifiable achievements - add metrics!')
+        
+        # 6. Formatting & Readability Score (10 points)
+        format_score = 0
+        format_details = []
+        
+        # Resume length (4 points) - ideal: 400-1500 words
+        word_count = len(resume_text.split())
+        if 400 <= word_count <= 1500:
+            format_score += 4
+            format_details.append(f'Optimal length ({word_count} words)')
+        elif 300 <= word_count < 400 or 1500 < word_count <= 2000:
+            format_score += 2
+            format_details.append(f'Acceptable length ({word_count} words)')
+        else:
+            format_details.append(f'Suboptimal length ({word_count} words)')
+        
+        # Bullet points (3 points)
+        bullet_count = resume_text.count('•') + resume_text.count('●') + resume_text.count('○') + text_lower.count('\n- ') + text_lower.count('\n* ')
+        if bullet_count >= 8:
+            format_score += 3
+            format_details.append(f'{bullet_count} bullet points - well structured')
+        elif bullet_count >= 4:
+            format_score += 2
+            format_details.append(f'{bullet_count} bullet points - add more')
+        else:
+            format_details.append('Few/no bullet points - add structure')
+        
+        # Proper formatting (3 points)
+        lines = resume_text.split('\n')
+        non_empty_lines = [l for l in lines if l.strip()]
+        if len(non_empty_lines) >= 20:
+            format_score += 2
+            format_details.append('Good content density')
+        
+        # Check for ALL CAPS abuse
+        caps_words = re.findall(r'\b[A-Z]{4,}\b', resume_text)
+        if len(caps_words) < 5:
+            format_score += 1
+            format_details.append('Proper capitalization')
+        else:
+            format_details.append('Reduce ALL CAPS usage')
+        
+        # Calculate total score
+        total_score = contact_score + section_score + keyword_score + experience_score + achievement_score + format_score
+        
+        # Determine grade
+        if total_score >= 85:
+            grade = 'A'
+            grade_description = 'Excellent - Highly ATS optimized, likely to pass most systems'
+        elif total_score >= 70:
+            grade = 'B'
+            grade_description = 'Good - Well optimized, should pass most ATS systems'
+        elif total_score >= 55:
+            grade = 'C'
+            grade_description = 'Average - May pass basic ATS, needs improvement'
+        elif total_score >= 40:
+            grade = 'D'
+            grade_description = 'Below Average - Likely to be filtered out by ATS'
+        else:
+            grade = 'F'
+            grade_description = 'Poor - Will likely fail ATS screening'
+        
+        return {
+            'total_score': total_score,
+            'grade': grade,
+            'grade_description': grade_description,
+            'breakdown': {
+                'contact_info': {
+                    'score': contact_score,
+                    'max': 10,
+                    'label': 'Contact Information',
+                    'details': contact_details
+                },
+                'section_structure': {
+                    'score': section_score,
+                    'max': 20,
+                    'label': 'Section Structure',
+                    'details': sections_found if sections_found else ['Missing key sections']
+                },
+                'keywords_skills': {
+                    'score': keyword_score,
+                    'max': 25,
+                    'label': 'Keywords & Skills',
+                    'details': skills_found[:10] if skills_found else ['No technical keywords found']
+                },
+                'experience_details': {
+                    'score': experience_score,
+                    'max': 20,
+                    'label': 'Experience Details',
+                    'details': experience_details
+                },
+                'quantifiable_achievements': {
+                    'score': achievement_score,
+                    'max': 15,
+                    'label': 'Quantifiable Achievements',
+                    'details': achievements
+                },
+                'formatting': {
+                    'score': format_score,
+                    'max': 10,
+                    'label': 'Formatting & Readability',
+                    'details': format_details
+                }
+            }
+        }
+    
+    def _check_spelling(self, text: str) -> List[Dict]:
+        """Check for common spelling errors in resume"""
+        common_errors = {
+            'teh': 'the', 'recieve': 'receive', 'occured': 'occurred',
+            'seperate': 'separate', 'definately': 'definitely', 'accomodate': 'accommodate',
+            'occurence': 'occurrence', 'refered': 'referred', 'managment': 'management',
+            'developement': 'development', 'enviroment': 'environment', 'responsibilites': 'responsibilities',
+            'proffesional': 'professional', 'experiance': 'experience', 'acheive': 'achieve',
+            'beleive': 'believe', 'calender': 'calendar', 'collegue': 'colleague',
+            'commited': 'committed', 'comunication': 'communication', 'concious': 'conscious',
+            'consistant': 'consistent', 'decison': 'decision', 'diffrent': 'different',
+            'efficent': 'efficient', 'excellant': 'excellent', 'familar': 'familiar',
+            'goverment': 'government', 'immediatly': 'immediately', 'independant': 'independent',
+            'knowlege': 'knowledge', 'liason': 'liaison', 'maintainance': 'maintenance',
+            'neccessary': 'necessary', 'noticable': 'noticeable', 'occassion': 'occasion',
+            'paralel': 'parallel', 'persistant': 'persistent', 'posession': 'possession',
+            'prefered': 'preferred', 'priviledge': 'privilege', 'recomend': 'recommend',
+            'relevent': 'relevant', 'succesful': 'successful', 'tommorow': 'tomorrow',
+            'untill': 'until', 'wierd': 'weird', 'writting': 'writing'
+        }
+        
+        errors = []
+        words = re.findall(r'\b\w+\b', text.lower())
+        
+        for word in words:
+            if word in common_errors:
+                # Find context
+                pattern = re.compile(r'.{0,30}' + re.escape(word) + r'.{0,30}', re.IGNORECASE)
+                match = pattern.search(text)
+                context = match.group(0) if match else word
+                
+                errors.append({
+                    'word': word,
+                    'suggestion': common_errors[word],
+                    'context': f"...{context}..."
+                })
+        
+        return errors[:10]  # Limit to 10 errors
     
 def get_ai_service() -> AIAnalysisInterface:
     """Factory function to get appropriate AI service"""
