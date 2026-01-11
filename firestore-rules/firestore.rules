@@ -1,0 +1,133 @@
+rules_version = '2';
+
+/**
+ * Firestore Security Rules for AI Resume Matcher
+ * Implements role-based access control with Firebase Authentication
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions for authentication and authorization
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return request.auth.token.role;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'ADMIN';
+    }
+    
+    function isRecruiter() {
+      return isAuthenticated() && getUserRole() == 'RECRUITER';
+    }
+    
+    function isCandidate() {
+      return isAuthenticated() && getUserRole() == 'CANDIDATE';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own profile, admins can read all
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can create their own profile during registration
+      allow create: if isOwner(userId) && 
+                      request.resource.data.uid == request.auth.uid &&
+                      request.resource.data.email == request.auth.token.email;
+      
+      // Users can update their own profile (limited fields), admins can update all
+      allow update: if (isOwner(userId) && 
+                       onlyUpdating(['name', 'updatedAt'])) || 
+                      isAdmin();
+      
+      // Only admins can delete users
+      allow delete: if isAdmin();
+    }
+    
+    // Resumes collection
+    match /resumes/{resumeId} {
+      // Candidates can read their own resumes, recruiters and admins can read all processed resumes
+      allow read: if (isCandidate() && resource.data.userId == request.auth.uid) ||
+                     (isRecruiter() && resource.data.processed == true) ||
+                     isAdmin();
+      
+      // Only candidates can create resumes for themselves
+      allow create: if isCandidate() && 
+                      request.resource.data.userId == request.auth.uid;
+      
+      // Candidates can update their own resumes, system can update for processing
+      allow update: if (isCandidate() && resource.data.userId == request.auth.uid) ||
+                      isAdmin();
+      
+      // Candidates can delete their own resumes, admins can delete any
+      allow delete: if (isCandidate() && resource.data.userId == request.auth.uid) ||
+                      isAdmin();
+    }
+    
+    // Jobs collection
+    match /jobs/{jobId} {
+      // All authenticated users can read active jobs, recruiters can read their own jobs
+      allow read: if isAuthenticated() && 
+                     (resource.data.active == true || 
+                      resource.data.recruiterId == request.auth.uid ||
+                      isAdmin());
+      
+      // Only recruiters can create jobs
+      allow create: if isRecruiter() && 
+                      request.resource.data.recruiterId == request.auth.uid;
+      
+      // Recruiters can update their own jobs, admins can update any
+      allow update: if (isRecruiter() && resource.data.recruiterId == request.auth.uid) ||
+                      isAdmin();
+      
+      // Recruiters can delete their own jobs, admins can delete any
+      allow delete: if (isRecruiter() && resource.data.recruiterId == request.auth.uid) ||
+                      isAdmin();
+    }
+    
+    // Matches collection
+    match /matches/{matchId} {
+      // Recruiters can read matches for their jobs, candidates can read their own matches, admins can read all
+      allow read: if isAuthenticated() && (
+                    (isRecruiter() && isRecruiterForJob(resource.data.jobId)) ||
+                    (isCandidate() && isCandidateForResume(resource.data.resumeId)) ||
+                    isAdmin()
+                  );
+      
+      // Only system/admin can create matches
+      allow create: if isAdmin();
+      
+      // Recruiters can update matches for their jobs (add notes, mark as reviewed)
+      allow update: if (isRecruiter() && isRecruiterForJob(resource.data.jobId) &&
+                       onlyUpdating(['reviewed', 'recruiterNotes'])) ||
+                      isAdmin();
+      
+      // Only admins can delete matches
+      allow delete: if isAdmin();
+    }
+    
+    // Helper function to check if user is recruiter for a specific job
+    function isRecruiterForJob(jobId) {
+      return exists(/databases/$(database)/documents/jobs/$(jobId)) &&
+             get(/databases/$(database)/documents/jobs/$(jobId)).data.recruiterId == request.auth.uid;
+    }
+    
+    // Helper function to check if user is candidate for a specific resume
+    function isCandidateForResume(resumeId) {
+      return exists(/databases/$(database)/documents/resumes/$(resumeId)) &&
+             get(/databases/$(database)/documents/resumes/$(resumeId)).data.userId == request.auth.uid;
+    }
+    
+    // Helper function to check if only specific fields are being updated
+    function onlyUpdating(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+  }
+}
