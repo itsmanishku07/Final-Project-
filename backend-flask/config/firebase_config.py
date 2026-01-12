@@ -7,68 +7,40 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import os
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
+# Firebase Service Account Credentials (embedded for Vercel deployment)
+FIREBASE_CREDENTIALS = {
+    "type": "service_account",
+    "project_id": "resume-project-5aa61",
+    "private_key_id": "000b707ac811d6d2364c80f799d8eaf1f8f65f37",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCeE1dQur7XpSXH\nDrFYjF3CjahEIQ+ZzNz8GMgtp6yDPNNS+DHFnDkG01LNG5HQKwls44it1y5PTM0y\n1jc13asr4iGYDR8GRt/6sx41+k0oytCgJtOxcp3gmXmEv1uRR5gMIqgcllaSBTx7\n/4QV2uRZ6nZNEWOpU9eKWW58eFZ4hVT2K0jS42FR/WwhVJd0dGsxYkbQLzEgy/N/\nuBdEUUILTthvihI3C6yRnt0SsenUUO/6C92xfTCLCTEcfkLwyqhil67bKHkcct/n\nzC/PpyCH3UYjHwjEJ/PIB8aEVIEc/YOmvZml5r5T/9zSAauTsdxIhVsqfSIQ5c8v\ncYyESYfPAgMBAAECggEAG+9ED2apAhfTuL0udvz7Nr3s3flPtfi/lqdUfMj0Ug7m\nM3Pb69WDOGMQ72EvX++zDzSYe0wbCXWDj7fOcuz06mDgWev7rxLIUxfjP1u31f0d\naCfkYifkoYPNtzlP17kktARN3BtvOgfF3A3YDDqt/vvRoyXvDEXeQbszLLjhYxO5\nsMtXq+boXwo+NbvX8leZmMDRPbZH5jOd0pcptzCilDRTrklTt078cV7D0N0AUF/9\n5Sd203rkAyU/51yhwklDeVp46pfj4b4t9uWCvTAuGvoTn7iuPrrw5o2wVrrsoiHs\nQsVA1+JNXS3e1uTDLf7nF5umG4CKvUv5Qs8QcrXoUQKBgQDUBkdtfAURHarJcGyp\nUNwlyu3PuKIJ2daPHRHhwDoyU/LiVfZHJveZdJ4+bYcrCQ7H7ekn4fZntugkKYd7\nHgqeT5sn4UHImWYVgsQVoyqRHo3E/ijSomk180N+30GqVwFRARfcWFmH0XSPb18h\nQnRL2zxloD4TrJJu/VZjAFJnEQKBgQC+3JH7yG1VJVVncPI85GuAFxSh6xPEAe0/\nBk8n5yzwSZ/6gde91JdsZTkuJ2uNCkVSih8m3/1GOZ1lks9SZXo6famekiuZlj8B\nve9z+pO4C+e5EpB3ayj+XVBErHCFB92TJllSmlPQWDtDM1GPVEzTP2nVm23VnutU\ndpPpbeXA3wKBgFrGsXArqBOy6vtB2hQH3amEn5rOxvmGvbkaThyka4Y+sP+8pCvE\ngD/AUTwTMsr3Hs/0iV2c/h1bjzpkWXAZ5ZvwI1LIu5yCKNXO3dsRt9jYBwSveJTu\nGjOSCnTYa0nd5F9lI20gmnxu7gO3QDiCNj6AB/TOzaUovq0sY/8RFTaxAoGBALXu\nvT07rXR3dPR4hoAi4JIl7iX2Vk4F5CeqlPOdeonGNLfu4z7xkjHiP2JOc0frXW8z\neERvSReSvgVfrz6EusFcnb4o6WSrAn5flgyA9CSBPK5/ErSysk3dlzEPCubUO5MU\nABssPu6f3EXPelRc8CqCDRlv4n+5z+sgaRgfCN4TAoGBAIwjpHqMl8/EQXoH8p0n\n+ZNEZ7ZbSJFTsOBbPwxWZkMBWn0J20K58GTcWt1INc4lu7K+OlOMCOPRl90XQOdA\nG9D2A6mh4JoK+gx6MQ2Z+54Aa6q4xf4pRXPFLdzCesjbKclI2ViXhTJJwJRp/Syf\nR8gJU2LILl3ax0NXhhluGvbc\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com",
+    "client_id": "106770522496512313516",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40resume-project-5aa61.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+}
+
 def initialize_firebase():
-    """Initialize Firebase Admin SDK"""
+    """Initialize Firebase Admin SDK with embedded credentials"""
     try:
-        app_mode = os.getenv('APP_MODE', 'demo')
-        use_firebase = os.getenv('USE_FIREBASE', 'false').lower() == 'true'
-        
-        if app_mode == 'demo' and not use_firebase:
-            # Pure demo mode - skip Firebase initialization entirely
-            logger.info("Running in pure demo mode - skipping Firebase initialization")
+        # Skip if already initialized
+        if firebase_admin._apps:
+            logger.info("Firebase already initialized")
             return
-            
-        elif app_mode == 'production' or use_firebase:
-            # Production mode - try to use actual service account file
-            service_account_path = os.getenv('FIREBASE_SERVICE_ACCOUNT_PATH', 'firebase-service-account.json')
-            
-            if os.path.exists(service_account_path):
-                try:
-                    cred = credentials.Certificate(service_account_path)
-                    firebase_admin.initialize_app(cred)
-                    logger.info("Firebase initialized successfully in production mode")
-                    return
-                except Exception as e:
-                    logger.error(f"Failed to initialize Firebase with service account: {e}")
-                    logger.info("Falling back to demo mode due to invalid credentials")
-            else:
-                logger.error(f"Firebase service account file not found: {service_account_path}")
-                logger.info("Falling back to demo mode")
-            
-            # If Firebase initialization fails, continue without it
-            logger.warning("Firebase initialization failed - continuing with mock repositories")
-                
-        else:
-            # Demo mode with Firebase emulator (if available)
-            logger.info("Initializing Firebase in demo mode with emulator")
-            
-            # Create demo service account credentials
-            demo_creds = {
-                "type": "service_account",
-                "project_id": os.getenv('FIREBASE_PROJECT_ID', 'demo-project'),
-                "private_key_id": os.getenv('FIREBASE_PRIVATE_KEY_ID', 'demo-key-id'),
-                "private_key": os.getenv('FIREBASE_PRIVATE_KEY', '').replace('\\n', '\n'),
-                "client_email": os.getenv('FIREBASE_CLIENT_EMAIL', 'demo@demo-project.iam.gserviceaccount.com'),
-                "client_id": os.getenv('FIREBASE_CLIENT_ID', 'demo-client-id'),
-                "auth_uri": os.getenv('FIREBASE_AUTH_URI', 'https://accounts.google.com/o/oauth2/auth'),
-                "token_uri": os.getenv('FIREBASE_TOKEN_URI', 'https://oauth2.googleapis.com/token')
-            }
-            
-            try:
-                cred = credentials.Certificate(demo_creds)
-                firebase_admin.initialize_app(cred)
-                logger.info("Firebase initialized successfully in demo mode")
-            except Exception as e:
-                logger.warning(f"Firebase demo initialization failed: {e}")
-                logger.info("Continuing without Firebase - using mock services")
+        
+        # Use embedded credentials
+        cred = credentials.Certificate(FIREBASE_CREDENTIALS)
+        firebase_admin.initialize_app(cred)
+        logger.info("Firebase initialized successfully")
                 
     except Exception as e:
         logger.error(f"Failed to initialize Firebase: {e}")
-        logger.info("Continuing without Firebase - using mock services")
+        raise
 
 def get_firestore_client():
     """Get Firestore client"""
