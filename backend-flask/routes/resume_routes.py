@@ -8,7 +8,7 @@ import logging
 from functools import wraps
 from repositories.resume_repository import ResumeRepository
 from repositories.user_repository import UserRepository
-from models.resume import Resume, AIAnalysis
+from models.resume import Resume, AIAnalysis, ContactInfo
 from services.file_service import FileProcessingService
 from services.ai_service import get_ai_service
 from utils.auth_utils import get_current_user
@@ -106,11 +106,25 @@ def upload_resume(current_user):
                 logger.info(f"Starting AI analysis for resume: {saved_resume.id}")
                 ai_response = ai_service.analyze_resume(extracted_text)
                 
+                # Create contact info from AI response
+                contact_info = None
+                if ai_response.contact_info:
+                    contact_info = ContactInfo(
+                        email=ai_response.contact_info.get('email', ''),
+                        phone=ai_response.contact_info.get('phone', ''),
+                        linkedin=ai_response.contact_info.get('linkedin', ''),
+                        github=ai_response.contact_info.get('github', ''),
+                        portfolio=ai_response.contact_info.get('portfolio', ''),
+                        location=ai_response.contact_info.get('location', ''),
+                        name=ai_response.contact_info.get('name', '')
+                    )
+                
                 # Update resume with AI analysis
                 analysis = AIAnalysis(
                     skills=ai_response.skills,
                     experience_years=ai_response.experience_years,
-                    education=ai_response.education
+                    education=ai_response.education,
+                    contact_info=contact_info
                 )
                 saved_resume.set_ai_analysis(analysis)
                 resume_repository.update_resume(saved_resume)
@@ -169,7 +183,8 @@ def get_my_resumes(current_user):
                 data['ai_analysis'] = {
                     'skills': resume.ai_analysis.skills,
                     'experience_years': resume.ai_analysis.experience_years,
-                    'education': resume.ai_analysis.education
+                    'education': resume.ai_analysis.education,
+                    'contact_info': resume.ai_analysis.contact_info.to_dict() if resume.ai_analysis.contact_info else {}
                 }
             
             resume_data.append(data)
@@ -215,7 +230,8 @@ def get_resume(current_user, resume_id):
             data['ai_analysis'] = {
                 'skills': resume.ai_analysis.skills,
                 'experience_years': resume.ai_analysis.experience_years,
-                'education': resume.ai_analysis.education
+                'education': resume.ai_analysis.education,
+                'contact_info': resume.ai_analysis.contact_info.to_dict() if resume.ai_analysis.contact_info else {}
             }
         
         response = {
@@ -278,7 +294,8 @@ def get_processed_resumes(current_user):
                 data['ai_analysis'] = {
                     'skills': resume.ai_analysis.skills,
                     'experience_years': resume.ai_analysis.experience_years,
-                    'education': resume.ai_analysis.education
+                    'education': resume.ai_analysis.education,
+                    'contact_info': resume.ai_analysis.contact_info.to_dict() if resume.ai_analysis.contact_info else {}
                 }
             
             resume_data.append(data)
