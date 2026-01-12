@@ -3490,3 +3490,72 @@
 2026-01-11 23:31:52,081 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 23:31:52] "GET /api/applications/my-applications HTTP/1.1" 200 -
 2026-01-11 23:31:55,542 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 23:31:55] "GET /api/applications/my-applications HTTP/1.1" 200 -
 2026-01-11 23:31:59,388 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 23:31:59] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:22,610 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-12 00:35:22,620 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:23,038 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:23,038 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:23,039 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-12 00:35:23,043 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:23,047 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-12 00:35:23,047 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:23,048 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:23,048 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:23,048 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-12 00:35:23,049 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:23,050 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:23,050 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:23,050 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-12 00:35:23,053 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-12 00:35:23,054 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:23,054 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:23,054 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:23,054 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-12 00:35:23,070 - app - INFO - Flask application initialized in production mode
+2026-01-12 00:35:23,109 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.226.174.219:8080
+2026-01-12 00:35:23,110 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 00:35:23,112 - werkzeug - INFO -  * Restarting with stat
+2026-01-12 00:35:25,077 - config.firebase_config - INFO - Firebase initialized successfully in production mode
+2026-01-12 00:35:25,085 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:25,362 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:25,362 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:25,363 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-12 00:35:25,368 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:25,376 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-12 00:35:25,376 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:25,377 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:25,377 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:25,378 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-12 00:35:25,381 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:25,381 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:25,382 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:25,383 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-12 00:35:25,389 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-12 00:35:25,390 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-12 00:35:25,390 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-12 00:35:25,391 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-12 00:35:25,391 - services.ai_service - INFO - Production AI Analysis Service initialized
+2026-01-12 00:35:25,434 - app - INFO - Flask application initialized in production mode
+2026-01-12 00:35:25,455 - werkzeug - WARNING -  * Debugger is active!
+2026-01-12 00:35:25,460 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-12 00:35:30,899 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:30] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-12 00:35:35,457 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:35] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-12 00:35:35,480 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:35] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:35,795 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:35] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-12 00:35:35,797 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:35] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:35,799 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:35] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:35,808 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:35] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-12 00:35:38,066 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:38] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-12 00:35:40,274 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:40] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:41,259 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:41] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-12 00:35:44,119 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:44] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:47,877 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:47] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:35:51,433 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:35:51] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-12 00:38:49,828 - utils.auth_utils - ERROR - Firebase token verification failed: Invalid base64-encoded string: number of data characters (341) cannot be 1 more than a multiple of 4
+2026-01-12 00:38:49,830 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:38:49] "[31m[1mGET /api/resumes/my-resumes HTTP/1.1[0m" 401 -
+2026-01-12 00:39:12,317 - utils.auth_utils - ERROR - Firebase token verification failed: Illegal ID token provided: b''. ID token must be a non-empty string.
+2026-01-12 00:39:12,318 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:39:12] "[31m[1mGET /api/resumes/my-resumes HTTP/1.1[0m" 401 -
+2026-01-12 00:39:18,613 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 00:39:18] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-12 01:08:15,751 - werkzeug - INFO - 127.0.0.1 - - [12/Jan/2026 01:08:15] "GET /api/resumes/my-resumes HTTP/1.1" 200 -

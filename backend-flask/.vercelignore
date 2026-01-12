@@ -1,0 +1,23 @@
+# Ignore files for Vercel deployment
+.git
+.gitignore
+.env
+.env.local
+.env.development
+.env.example
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+logs/
+*.log
+.DS_Store
+Thumbs.db
+*.md
+tests/
+*.test.py
+firebase-service-account.json
