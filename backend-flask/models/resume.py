@@ -7,27 +7,71 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 import uuid
 
+class ContactInfo:
+    """Contact information extracted from resume"""
+    
+    def __init__(self, email: str = '', phone: str = '', linkedin: str = '', 
+                 github: str = '', portfolio: str = '', location: str = '', name: str = ''):
+        self.email = email
+        self.phone = phone
+        self.linkedin = linkedin
+        self.github = github
+        self.portfolio = portfolio
+        self.location = location
+        self.name = name
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'email': self.email,
+            'phone': self.phone,
+            'linkedin': self.linkedin,
+            'github': self.github,
+            'portfolio': self.portfolio,
+            'location': self.location,
+            'name': self.name
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'ContactInfo':
+        return cls(
+            email=data.get('email', ''),
+            phone=data.get('phone', ''),
+            linkedin=data.get('linkedin', ''),
+            github=data.get('github', ''),
+            portfolio=data.get('portfolio', ''),
+            location=data.get('location', ''),
+            name=data.get('name', '')
+        )
+
 class AIAnalysis:
     """AI analysis results for resume"""
     
-    def __init__(self, skills: List[str], experience_years: int, education: str):
+    def __init__(self, skills: List[str], experience_years: int, education: str,
+                 contact_info: Optional[ContactInfo] = None):
         self.skills = skills
         self.experience_years = experience_years
         self.education = education
+        self.contact_info = contact_info or ContactInfo()
     
     def to_dict(self) -> Dict[str, Any]:
         return {
             'skills': self.skills,
             'experience_years': self.experience_years,
-            'education': self.education
+            'education': self.education,
+            'contact_info': self.contact_info.to_dict()
         }
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'AIAnalysis':
+        contact_info = None
+        if 'contact_info' in data and data['contact_info']:
+            contact_info = ContactInfo.from_dict(data['contact_info'])
+        
         return cls(
             skills=data.get('skills', []),
             experience_years=data.get('experience_years', 0),
-            education=data.get('education', '')
+            education=data.get('education', ''),
+            contact_info=contact_info
         )
 
 class Resume:

@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify
 import logging
 from functools import wraps
 from repositories.user_repository import UserRepository
+from repositories.resume_repository import ResumeRepository
 from models.user import User, UserRole
 from utils.auth_utils import verify_firebase_token, get_current_user
 
@@ -14,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 auth_bp = Blueprint('auth', __name__)
 user_repository = UserRepository()
+resume_repository = ResumeRepository()
 
 def require_auth(f):
     """Decorator to require authentication"""
@@ -175,6 +177,7 @@ def get_current_profile(current_user):
                 'email': user.email,
                 'role': user.role.value,
                 'active': user.active,
+                'profile': user.profile.to_dict(),
                 'created_at': user.created_at.isoformat(),
                 'updated_at': user.updated_at.isoformat()
             }
@@ -200,9 +203,13 @@ def update_profile(current_user):
         if not user:
             return jsonify({'success': False, 'message': 'User not found'}), 404
         
-        # Update allowed fields
-        if 'name' in data:
-            user.update_profile(name=data['name'])
+        # Update name if provided
+        name = data.get('name')
+        
+        # Update profile fields if provided
+        profile_data = data.get('profile', {})
+        
+        user.update_profile(name=name, profile_data=profile_data)
         
         updated_user = user_repository.update_user(user)
         
@@ -213,7 +220,8 @@ def update_profile(current_user):
                 'uid': updated_user.uid,
                 'name': updated_user.name,
                 'email': updated_user.email,
-                'role': updated_user.role.value
+                'role': updated_user.role.value,
+                'profile': updated_user.profile.to_dict()
             }
         }
         
@@ -240,3 +248,43 @@ def validate_token(current_user):
     except Exception as e:
         logger.error(f"Token validation failed: {e}")
         return jsonify({'valid': False, 'message': 'Invalid token'}), 401
+
+
+@auth_bp.route('/profile/resume-data', methods=['GET'])
+@require_auth
+def get_resume_data_for_profile(current_user):
+    """Get extracted resume data to pre-populate profile"""
+    try:
+        # Get user's latest processed resume
+        resumes = resume_repository.find_by_user_id(current_user['uid'])
+        
+        resume_data = {
+            'skills': [],
+            'experience_years': 0,
+            'education': '',
+            'contact_info': {}
+        }
+        
+        # Find the latest processed resume
+        processed_resumes = [r for r in resumes if r.processed and r.ai_analysis]
+        if processed_resumes:
+            # Sort by analyzed_at descending
+            processed_resumes.sort(key=lambda r: r.analyzed_at or r.uploaded_at, reverse=True)
+            latest_resume = processed_resumes[0]
+            
+            if latest_resume.ai_analysis:
+                resume_data['skills'] = latest_resume.ai_analysis.skills or []
+                resume_data['experience_years'] = latest_resume.ai_analysis.experience_years or 0
+                resume_data['education'] = latest_resume.ai_analysis.education or ''
+                if latest_resume.ai_analysis.contact_info:
+                    resume_data['contact_info'] = latest_resume.ai_analysis.contact_info.to_dict()
+        
+        return jsonify({
+            'success': True,
+            'resume_data': resume_data,
+            'has_resume': len(processed_resumes) > 0
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to get resume data: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500

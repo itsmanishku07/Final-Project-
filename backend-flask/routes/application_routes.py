@@ -102,12 +102,13 @@ def apply_to_job(current_user):
         )
         application.cover_letter = cover_letter
         
-        # Copy AI analysis from resume
+        # Copy AI analysis from resume (including contact info)
         if resume.ai_analysis:
             application.ai_analysis = {
                 'skills': resume.ai_analysis.skills,
                 'experience_years': resume.ai_analysis.experience_years,
-                'education': resume.ai_analysis.education
+                'education': resume.ai_analysis.education,
+                'contact_info': resume.ai_analysis.contact_info.to_dict() if resume.ai_analysis.contact_info else {}
             }
         
         # Calculate match score with job
@@ -197,22 +198,48 @@ def get_job_applications(current_user, job_id):
         
         app_data = []
         for app in applications:
-            # Get candidate details
+            # Get candidate details from user profile
             candidate = user_repository.find_by_uid(app.candidate_id)
             resume = resume_repository.find_by_id(app.resume_id)
+            
+            # Get profile data from user (not from resume)
+            candidate_profile = {}
+            if candidate and candidate.profile:
+                candidate_profile = {
+                    'phone': candidate.profile.phone,
+                    'location': candidate.profile.location,
+                    'linkedin': candidate.profile.linkedin,
+                    'github': candidate.profile.github,
+                    'portfolio': candidate.profile.portfolio,
+                    'bio': candidate.profile.bio,
+                    'headline': candidate.profile.headline,
+                    'skills': candidate.profile.skills,
+                    'work_experience': [exp.to_dict() for exp in candidate.profile.work_experience],
+                    'education': [edu.to_dict() for edu in candidate.profile.education]
+                }
+            
+            # AI analysis from resume (skills, experience, education only)
+            ai_analysis = app.ai_analysis or {}
+            if resume and resume.ai_analysis:
+                ai_analysis = {
+                    'skills': resume.ai_analysis.skills,
+                    'experience_years': resume.ai_analysis.experience_years,
+                    'education': resume.ai_analysis.education
+                }
             
             data = {
                 'id': app.id,
                 'candidate_id': app.candidate_id,
                 'candidate_name': candidate.name if candidate else 'Unknown',
                 'candidate_email': candidate.email if candidate else '',
+                'candidate_profile': candidate_profile,  # Profile data from user
                 'resume_id': app.resume_id,
                 'resume_name': resume.file_name if resume else '',
                 'status': app.status,
                 'match_score': app.match_score,
                 'matched_skills': app.matched_skills,
                 'missing_skills': app.missing_skills,
-                'ai_analysis': app.ai_analysis,
+                'ai_analysis': ai_analysis,  # Skills/experience from resume
                 'cover_letter': app.cover_letter or '',
                 'recruiter_notes': app.recruiter_notes or '',
                 'applied_at': app.applied_at.isoformat(),
@@ -351,4 +378,80 @@ def get_recruiter_dashboard(current_user):
         
     except Exception as e:
         logger.error(f"Failed to get dashboard: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@application_bp.route('/<application_id>/interview-questions', methods=['GET'])
+@require_auth
+@require_role(['RECRUITER', 'ADMIN'])
+def get_interview_questions(current_user, application_id):
+    """Generate AI-powered interview questions for a shortlisted candidate"""
+    try:
+        # Get application
+        application = application_repository.find_by_id(application_id)
+        if not application:
+            return jsonify({'success': False, 'message': 'Application not found'}), 404
+        
+        # Verify recruiter owns the job
+        job = job_repository.find_by_id(application.job_id)
+        if not job:
+            return jsonify({'success': False, 'message': 'Job not found'}), 404
+        
+        if job.recruiter_id != current_user['uid'] and current_user.get('role') != 'ADMIN':
+            return jsonify({'success': False, 'message': 'Not authorized'}), 403
+        
+        # Check if candidate is shortlisted or hired
+        if application.status not in [ApplicationStatus.SHORTLISTED, ApplicationStatus.HIRED]:
+            return jsonify({
+                'success': False, 
+                'message': 'Interview questions are only available for shortlisted candidates'
+            }), 400
+        
+        # Get candidate's resume
+        resume = resume_repository.find_by_id(application.resume_id)
+        resume_text = resume.extracted_text if resume else ''
+        
+        # Get candidate skills from application or resume
+        candidate_skills = []
+        experience_years = 0
+        
+        if application.ai_analysis:
+            candidate_skills = application.ai_analysis.get('skills', [])
+            experience_years = application.ai_analysis.get('experience_years', 0)
+        elif resume and resume.ai_analysis:
+            candidate_skills = resume.ai_analysis.skills
+            experience_years = resume.ai_analysis.experience_years
+        
+        # Generate interview questions
+        questions = ai_service.generate_interview_questions(
+            resume_text=resume_text,
+            job_description=job.description,
+            required_skills=job.required_skills,
+            candidate_skills=candidate_skills,
+            experience_years=experience_years
+        )
+        
+        # Get candidate info for context
+        candidate = user_repository.find_by_uid(application.candidate_id)
+        
+        return jsonify({
+            'success': True,
+            'candidate': {
+                'name': candidate.name if candidate else 'Unknown',
+                'experience_years': experience_years,
+                'skills_count': len(candidate_skills),
+                'matched_skills': application.matched_skills or [],
+                'missing_skills': application.missing_skills or []
+            },
+            'job': {
+                'title': job.title,
+                'company': job.company,
+                'required_skills': job.required_skills
+            },
+            'questions': questions,
+            'total_questions': len(questions)
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to generate interview questions: {e}")
         return jsonify({'success': False, 'message': str(e)}), 500
