@@ -17,6 +17,8 @@ import MyApplications from './pages/MyApplications'
 import RecruiterDashboard from './pages/RecruiterDashboard'
 import JobApplicants from './pages/JobApplicants'
 import MyJobs from './pages/MyJobs'
+import MyInterviews from './pages/MyInterviews'
+import VideoCall from './pages/VideoCall'
 import NotFound from './pages/NotFound'
 
 /**
@@ -62,6 +64,19 @@ function App() {
                   <Route path="/my-applications" element={
                     <ProtectedRoute allowedRoles={['CANDIDATE', 'ADMIN']}>
                       <div className="container mx-auto px-4 py-8"><MyApplications /></div>
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Interview Routes - Both Candidate and Recruiter */}
+                  <Route path="/my-interviews" element={
+                    <ProtectedRoute>
+                      <div className="container mx-auto px-4 py-8"><MyInterviews /></div>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/video-call/:interviewId" element={
+                    <ProtectedRoute>
+                      <VideoCall />
                     </ProtectedRoute>
                   } />
                   

@@ -32,6 +32,12 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
+    // Video Calls collection (for WebRTC signaling)
+    match /calls/{callId} {
+      // Any authenticated user can read/write to calls for video interviews
+      allow read, write: if isAuthenticated();
+    }
+    
     // Users collection
     match /users/{userId} {
       // Users can read their own profile, admins can read all

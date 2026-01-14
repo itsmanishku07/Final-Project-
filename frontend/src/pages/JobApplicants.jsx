@@ -8,7 +8,7 @@ import {
   Mail, Phone, Linkedin, Github, Globe, MapPin, User, Briefcase, 
   GraduationCap, X, FileText, Calendar, Code, ExternalLink,
   CheckCircle, XCircle, Building, ChevronDown, MessageSquare, HelpCircle,
-  Lightbulb, Target, AlertCircle, RefreshCw, Send, Edit3
+  Lightbulb, Target, AlertCircle, RefreshCw, Send, Edit3, Video, Clock
 } from 'lucide-react'
 
 function JobApplicants() {
@@ -24,7 +24,10 @@ function JobApplicants() {
   const [selectedAppForQuestions, setSelectedAppForQuestions] = useState(null)
   
   // Email modal state
-  const [emailModal, setEmailModal] = useState(null) // { applicationId, status, candidateName, candidateEmail }
+  const [emailModal, setEmailModal] = useState(null)
+  
+  // Interview scheduling modal state
+  const [scheduleModal, setScheduleModal] = useState(null) // { applicationId, candidateName, candidateEmail }
 
   useEffect(() => {
     loadApplications()
@@ -720,6 +723,159 @@ function JobApplicants() {
     )
   }
 
+  // Schedule Interview Modal
+  const ScheduleInterviewModal = ({ data, onClose, onSchedule }) => {
+    const [scheduledAt, setScheduledAt] = useState('')
+    const [duration, setDuration] = useState(30)
+    const [notes, setNotes] = useState('')
+    const [scheduling, setScheduling] = useState(false)
+    
+    if (!data) return null
+    
+    const handleSchedule = async () => {
+      if (!scheduledAt) {
+        toast.error('Please select a date and time')
+        return
+      }
+      
+      setScheduling(true)
+      try {
+        // Log what we're sending
+        console.log('Scheduling interview at:', scheduledAt)
+        
+        const response = await api.post('/interviews/schedule', {
+          application_id: data.applicationId,
+          scheduled_at: scheduledAt,  // Format: "2026-01-15T14:30"
+          duration_minutes: duration,
+          notes: notes
+        })
+        
+        if (response.data.success) {
+          console.log('Interview scheduled:', response.data.interview)
+          toast.success('Interview scheduled! Email sent to candidate.')
+          onClose()
+          onSchedule()
+        }
+      } catch (error) {
+        console.error('Failed to schedule interview:', error)
+        toast.error(error.response?.data?.message || 'Failed to schedule interview')
+      } finally {
+        setScheduling(false)
+      }
+    }
+    
+    // Get minimum datetime (now + 1 hour)
+    const getMinDateTime = () => {
+      const now = new Date()
+      now.setHours(now.getHours() + 1)
+      return now.toISOString().slice(0, 16)
+    }
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Video className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">Schedule Interview</h2>
+                  <p className="text-purple-100 text-sm">{data.candidateName}</p>
+                </div>
+              </div>
+              <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-full">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Body */}
+          <div className="p-6 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Calendar className="w-4 h-4 inline mr-1" />
+                Date & Time *
+              </label>
+              <input
+                type="datetime-local"
+                value={scheduledAt}
+                onChange={(e) => setScheduledAt(e.target.value)}
+                min={getMinDateTime()}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Clock className="w-4 h-4 inline mr-1" />
+                Duration
+              </label>
+              <select
+                value={duration}
+                onChange={(e) => setDuration(parseInt(e.target.value))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value={15}>15 minutes</option>
+                <option value={30}>30 minutes</option>
+                <option value={45}>45 minutes</option>
+                <option value={60}>1 hour</option>
+                <option value={90}>1.5 hours</option>
+                <option value={120}>2 hours</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Edit3 className="w-4 h-4 inline mr-1" />
+                Notes for Candidate (Optional)
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={3}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+              />
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <strong>📧 Email Notification:</strong> The candidate will receive an email with the interview details and video call link.
+              </p>
+            </div>
+          </div>
+          
+          {/* Footer */}
+          <div className="p-4 border-t bg-gray-50 rounded-b-2xl flex justify-end gap-3">
+            <button 
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={handleSchedule}
+              disabled={scheduling || !scheduledAt}
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+            >
+              {scheduling ? (
+                <LoadingSpinner size="small" />
+              ) : (
+                <>
+                  <Video className="w-4 h-4" />
+                  Schedule Interview
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
@@ -1002,6 +1158,10 @@ function JobApplicants() {
                       )}
                       {app.status === 'SHORTLISTED' && (
                         <>
+                          <button onClick={() => setScheduleModal({ applicationId: app.id, candidateName: app.candidate_name, candidateEmail: app.candidate_email })}
+                            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm flex items-center justify-center">
+                            <Video className="w-4 h-4 mr-1" /> Schedule Interview
+                          </button>
                           <button onClick={() => loadInterviewQuestions(app.id)} disabled={loadingQuestions && selectedAppForQuestions === app.id}
                             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm disabled:opacity-50 flex items-center justify-center">
                             {loadingQuestions && selectedAppForQuestions === app.id ? (
@@ -1073,6 +1233,14 @@ function JobApplicants() {
           onClose={() => setEmailModal(null)}
           onSend={updateStatus}
           isUpdating={updating}
+        />
+      )}
+      
+      {scheduleModal && (
+        <ScheduleInterviewModal 
+          data={scheduleModal}
+          onClose={() => setScheduleModal(null)}
+          onSchedule={loadApplications}
         />
       )}
     </div>

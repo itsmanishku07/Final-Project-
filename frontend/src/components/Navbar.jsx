@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/FirebaseAuthContext'
-import { Menu, X, User, LogOut, Upload, Briefcase, BarChart3, Search, FileText, Users, Home } from 'lucide-react'
+import { Menu, X, User, LogOut, Upload, Briefcase, BarChart3, Search, FileText, Users, Home, Video } from 'lucide-react'
 import NotificationBell from './NotificationBell'
 
 /**
@@ -54,6 +54,12 @@ const Navbar = () => {
       path: '/my-applications',
       icon: FileText,
       show: isCandidate || isAdmin
+    },
+    {
+      name: 'My Interviews',
+      path: '/my-interviews',
+      icon: Video,
+      show: isAuthenticated
     },
     {
       name: 'Post Job',

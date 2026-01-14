@@ -55,6 +55,7 @@ def create_app():
     from routes.match_routes import match_bp
     from routes.admin_routes import admin_bp
     from routes.application_routes import application_bp
+    from routes.interview_routes import interview_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(resume_bp, url_prefix='/api/resumes')
@@ -62,6 +63,7 @@ def create_app():
     app.register_blueprint(match_bp, url_prefix='/api/matches')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(application_bp, url_prefix='/api/applications')
+    app.register_blueprint(interview_bp, url_prefix='/api/interviews')
     
     # Health check endpoint
     @app.route('/api/health')
