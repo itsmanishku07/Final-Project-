@@ -6,48 +6,73 @@ Handles Firebase Admin SDK setup for authentication and Firestore
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import os
+import json
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Firebase Service Account Credentials (embedded for Vercel deployment)
-FIREBASE_CREDENTIALS = {
-    "type": "service_account",
-    "project_id": "resume-project-5aa61",
-    "private_key_id": "000b707ac811d6d2364c80f799d8eaf1f8f65f37",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCeE1dQur7XpSXH\nDrFYjF3CjahEIQ+ZzNz8GMgtp6yDPNNS+DHFnDkG01LNG5HQKwls44it1y5PTM0y\n1jc13asr4iGYDR8GRt/6sx41+k0oytCgJtOxcp3gmXmEv1uRR5gMIqgcllaSBTx7\n/4QV2uRZ6nZNEWOpU9eKWW58eFZ4hVT2K0jS42FR/WwhVJd0dGsxYkbQLzEgy/N/\nuBdEUUILTthvihI3C6yRnt0SsenUUO/6C92xfTCLCTEcfkLwyqhil67bKHkcct/n\nzC/PpyCH3UYjHwjEJ/PIB8aEVIEc/YOmvZml5r5T/9zSAauTsdxIhVsqfSIQ5c8v\ncYyESYfPAgMBAAECggEAG+9ED2apAhfTuL0udvz7Nr3s3flPtfi/lqdUfMj0Ug7m\nM3Pb69WDOGMQ72EvX++zDzSYe0wbCXWDj7fOcuz06mDgWev7rxLIUxfjP1u31f0d\naCfkYifkoYPNtzlP17kktARN3BtvOgfF3A3YDDqt/vvRoyXvDEXeQbszLLjhYxO5\nsMtXq+boXwo+NbvX8leZmMDRPbZH5jOd0pcptzCilDRTrklTt078cV7D0N0AUF/9\n5Sd203rkAyU/51yhwklDeVp46pfj4b4t9uWCvTAuGvoTn7iuPrrw5o2wVrrsoiHs\nQsVA1+JNXS3e1uTDLf7nF5umG4CKvUv5Qs8QcrXoUQKBgQDUBkdtfAURHarJcGyp\nUNwlyu3PuKIJ2daPHRHhwDoyU/LiVfZHJveZdJ4+bYcrCQ7H7ekn4fZntugkKYd7\nHgqeT5sn4UHImWYVgsQVoyqRHo3E/ijSomk180N+30GqVwFRARfcWFmH0XSPb18h\nQnRL2zxloD4TrJJu/VZjAFJnEQKBgQC+3JH7yG1VJVVncPI85GuAFxSh6xPEAe0/\nBk8n5yzwSZ/6gde91JdsZTkuJ2uNCkVSih8m3/1GOZ1lks9SZXo6famekiuZlj8B\nve9z+pO4C+e5EpB3ayj+XVBErHCFB92TJllSmlPQWDtDM1GPVEzTP2nVm23VnutU\ndpPpbeXA3wKBgFrGsXArqBOy6vtB2hQH3amEn5rOxvmGvbkaThyka4Y+sP+8pCvE\ngD/AUTwTMsr3Hs/0iV2c/h1bjzpkWXAZ5ZvwI1LIu5yCKNXO3dsRt9jYBwSveJTu\nGjOSCnTYa0nd5F9lI20gmnxu7gO3QDiCNj6AB/TOzaUovq0sY/8RFTaxAoGBALXu\nvT07rXR3dPR4hoAi4JIl7iX2Vk4F5CeqlPOdeonGNLfu4z7xkjHiP2JOc0frXW8z\neERvSReSvgVfrz6EusFcnb4o6WSrAn5flgyA9CSBPK5/ErSysk3dlzEPCubUO5MU\nABssPu6f3EXPelRc8CqCDRlv4n+5z+sgaRgfCN4TAoGBAIwjpHqMl8/EQXoH8p0n\n+ZNEZ7ZbSJFTsOBbPwxWZkMBWn0J20K58GTcWt1INc4lu7K+OlOMCOPRl90XQOdA\nG9D2A6mh4JoK+gx6MQ2Z+54Aa6q4xf4pRXPFLdzCesjbKclI2ViXhTJJwJRp/Syf\nR8gJU2LILl3ax0NXhhluGvbc\n-----END PRIVATE KEY-----\n",
-    "client_email": "firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com",
-    "client_id": "106770522496512313516",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40resume-project-5aa61.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-}
+# Global flag to track initialization status
+_firebase_initialized = False
+_firebase_error = None
 
 def initialize_firebase():
-    """Initialize Firebase Admin SDK with embedded credentials"""
+    """Initialize Firebase Admin SDK from JSON file"""
+    global _firebase_initialized, _firebase_error
+    
     try:
-        # Skip if already initialized
+        # Delete any existing apps to force fresh initialization
         if firebase_admin._apps:
-            logger.info("Firebase already initialized")
-            return
+            for app_name in list(firebase_admin._apps.keys()):
+                firebase_admin.delete_app(firebase_admin.get_app(app_name))
+            logger.info("Deleted existing Firebase apps for fresh initialization")
         
-        # Use embedded credentials
-        cred = credentials.Certificate(FIREBASE_CREDENTIALS)
-        firebase_admin.initialize_app(cred)
-        logger.info("Firebase initialized successfully")
+        # Load from JSON file (not embedded credentials)
+        json_path = os.path.join(os.path.dirname(__file__), '..', 'firebase-service-account.json')
+        
+        if os.path.exists(json_path):
+            logger.info(f"Loading Firebase credentials from: {json_path}")
+            
+            # Read and validate the JSON file
+            with open(json_path, 'r') as f:
+                cred_data = json.load(f)
+            
+            # Log key info (not the actual key)
+            logger.info(f"Project ID: {cred_data.get('project_id')}")
+            logger.info(f"Client Email: {cred_data.get('client_email')}")
+            logger.info(f"Private Key ID: {cred_data.get('private_key_id')}")
+            logger.info(f"Client ID: {cred_data.get('client_id')}")
+            
+            # Validate required fields
+            required_fields = ['type', 'project_id', 'private_key', 'client_email']
+            for field in required_fields:
+                if field not in cred_data:
+                    raise ValueError(f"Missing required field: {field}")
+            
+            # Create credentials from the loaded data
+            cred = credentials.Certificate(cred_data)
+            firebase_admin.initialize_app(cred)
+            
+            _firebase_initialized = True
+            _firebase_error = None
+            logger.info("Firebase initialized successfully from JSON file")
+        else:
+            _firebase_error = "firebase-service-account.json not found"
+            logger.error(f"Firebase service account file not found: {json_path}")
+            raise FileNotFoundError(_firebase_error)
                 
     except Exception as e:
+        _firebase_initialized = False
+        _firebase_error = str(e)
         logger.error(f"Failed to initialize Firebase: {e}")
         raise
 
 def get_firestore_client():
     """Get Firestore client"""
+    global _firebase_error
     try:
-        # Check if Firebase is initialized
         if not firebase_admin._apps:
-            logger.info("Firebase not initialized - returning None for Firestore client")
+            if _firebase_error:
+                logger.warning(f"Firebase not available: {_firebase_error}")
             return None
         return firestore.client()
     except Exception as e:
@@ -56,12 +81,17 @@ def get_firestore_client():
 
 def get_auth_client():
     """Get Firebase Auth client"""
+    global _firebase_error
     try:
-        # Check if Firebase is initialized
         if not firebase_admin._apps:
-            logger.info("Firebase not initialized - returning None for Auth client")
+            if _firebase_error:
+                logger.warning(f"Firebase not available: {_firebase_error}")
             return None
         return auth
     except Exception as e:
         logger.warning(f"Failed to get Auth client: {e}")
         return None
+
+def is_firebase_available():
+    """Check if Firebase is properly initialized"""
+    return _firebase_initialized and bool(firebase_admin._apps)

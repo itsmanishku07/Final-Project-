@@ -11,12 +11,15 @@ import {
   Maximize, Minimize, Clock, Calendar, Briefcase, 
   ArrowLeft, Send, X
 } from 'lucide-react'
-import { doc, setDoc, onSnapshot, deleteDoc, getDoc } from 'firebase/firestore'
+import { 
+  doc, setDoc, onSnapshot, deleteDoc, getDoc, 
+  collection, addDoc, getDocs, updateDoc 
+} from 'firebase/firestore'
 
 function VideoCall() {
   const { interviewId } = useParams()
   const navigate = useNavigate()
-  const { userProfile } = useAuth()
+  const { user } = useAuth()
   
   const [loading, setLoading] = useState(true)
   const [meetingInfo, setMeetingInfo] = useState(null)
@@ -32,28 +35,32 @@ function VideoCall() {
   const [callDuration, setCallDuration] = useState(0)
   const [callStartTime, setCallStartTime] = useState(null)
   const [status, setStatus] = useState('Ready to join')
+  const [connectionLogs, setConnectionLogs] = useState([])
   
   const localVideoRef = useRef(null)
   const remoteVideoRef = useRef(null)
-  const pcRef = useRef(null)
+  const peerConnectionRef = useRef(null)
   const localStreamRef = useRef(null)
   const screenStreamRef = useRef(null)
-  const unsubRef = useRef(null)
+  const unsubscribersRef = useRef([])
   const timerRef = useRef(null)
+  const roomIdRef = useRef(null)
 
-  // WebRTC configuration with multiple STUN servers
-  const rtcConfig = {
+  const servers = {
     iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun3.l.google.com:19302' }
-    ]
+      { urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] }
+    ],
+    iceCandidatePoolSize: 10
+  }
+
+  const addLog = (message) => {
+    console.log(`[VideoCall] ${message}`)
+    setConnectionLogs(prev => [...prev.slice(-9), `${new Date().toLocaleTimeString()}: ${message}`])
   }
 
   useEffect(() => {
     loadMeetingInfo()
-    return () => cleanup()
+    return () => hangUp()
   }, [interviewId])
 
   useEffect(() => {
@@ -65,332 +72,313 @@ function VideoCall() {
     return () => timerRef.current && clearInterval(timerRef.current)
   }, [callStartTime])
 
-  const cleanup = () => {
-    console.log('Cleaning up...')
-    if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(t => t.stop())
-    }
-    if (screenStreamRef.current) {
-      screenStreamRef.current.getTracks().forEach(t => t.stop())
-    }
-    if (pcRef.current) {
-      pcRef.current.close()
-      pcRef.current = null
-    }
-    if (unsubRef.current) {
-      unsubRef.current()
-      unsubRef.current = null
-    }
-    if (timerRef.current) {
-      clearInterval(timerRef.current)
-    }
-  }
-
   const loadMeetingInfo = async () => {
     try {
       const res = await api.get(`/interviews/${interviewId}/join`)
       if (res.data.success) {
         setMeetingInfo(res.data.meeting)
-        console.log('Meeting info:', res.data.meeting)
+        addLog('Meeting info loaded')
       }
     } catch (err) {
       console.error('Failed to load meeting:', err)
-      toast.error('Failed to load meeting')
+      toast.error(err.response?.data?.message || 'Failed to load meeting')
       navigate(-1)
     } finally {
       setLoading(false)
     }
   }
 
-  const joinMeeting = async () => {
+  const setupMediaStream = async () => {
     try {
-      console.log('=== JOIN MEETING CLICKED ===')
-      setJoined(true)
-      setStatus('Requesting camera access...')
-      
-      // Step 1: Get local media
-      console.log('Step 1: Getting user media...')
-      let stream
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ 
-          video: true, 
-          audio: true 
-        })
-        console.log('Got media stream:', stream.getTracks().map(t => t.kind))
-      } catch (mediaError) {
-        console.error('Media error:', mediaError)
-        toast.error('Camera/Microphone access denied. Please allow access and try again.')
-        setStatus('Camera access denied')
-        setJoined(false)
-        return
-      }
-      
+      addLog('Requesting camera and microphone...')
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      })
       localStreamRef.current = stream
-      
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream
-        console.log('Local video element set')
       }
-      setStatus('Camera ready. Connecting...')
-      toast.success('Camera connected!')
+      addLog('Local media stream ready')
+      return stream
+    } catch (error) {
+      addLog(`Media error: ${error.message}`)
+      throw error
+    }
+  }
 
-      // Step 2: Create peer connection
-      console.log('Step 2: Creating peer connection...')
-      const pc = new RTCPeerConnection(rtcConfig)
-      pcRef.current = pc
+  const createPeerConnection = (localStream) => {
+    addLog('Creating peer connection...')
+    const pc = new RTCPeerConnection(servers)
+    
+    // Add local tracks to peer connection
+    localStream.getTracks().forEach(track => {
+      pc.addTrack(track, localStream)
+      addLog(`Added local ${track.kind} track`)
+    })
 
-      // Add local tracks to peer connection
-      stream.getTracks().forEach(track => {
-        console.log('Adding track to PC:', track.kind)
-        pc.addTrack(track, stream)
-      })
-
-      // Handle incoming remote stream
-      pc.ontrack = (event) => {
-        console.log('=== RECEIVED REMOTE TRACK ===', event.track.kind)
-        console.log('Streams:', event.streams)
-        
-        if (event.streams && event.streams[0]) {
-          console.log('Setting remote video stream')
-          if (remoteVideoRef.current) {
-            remoteVideoRef.current.srcObject = event.streams[0]
-            // Force play
-            remoteVideoRef.current.play().catch(e => console.log('Autoplay prevented:', e))
-          }
-          setRemoteConnected(true)
-          setStatus('Connected!')
-          if (!callStartTime) setCallStartTime(Date.now())
-          toast.success('Connected!')
-        }
+    // Handle remote stream
+    pc.ontrack = (event) => {
+      addLog(`Received remote ${event.track.kind} track`)
+      if (remoteVideoRef.current && event.streams[0]) {
+        remoteVideoRef.current.srcObject = event.streams[0]
+        setRemoteConnected(true)
+        setStatus('Connected!')
+        if (!callStartTime) setCallStartTime(Date.now())
+        toast.success('Participant connected!')
       }
+    }
 
-      // Handle ICE connection state changes
-      pc.oniceconnectionstatechange = () => {
-        console.log('ICE state changed:', pc.iceConnectionState)
-        setStatus(`ICE: ${pc.iceConnectionState}`)
-        if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
-          setRemoteConnected(true)
-          setStatus('Connected!')
-        } else if (pc.iceConnectionState === 'disconnected') {
-          setStatus('Reconnecting...')
-        } else if (pc.iceConnectionState === 'failed') {
-          setStatus('Connection failed')
-          setRemoteConnected(false)
-        }
+    // Monitor connection state
+    pc.onconnectionstatechange = () => {
+      addLog(`Connection state: ${pc.connectionState}`)
+      if (pc.connectionState === 'connected') {
+        setRemoteConnected(true)
+        setStatus('Connected!')
+      } else if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed') {
+        setRemoteConnected(false)
+        setStatus(pc.connectionState === 'failed' ? 'Connection failed' : 'Disconnected')
       }
+    }
 
-      pc.onicegatheringstatechange = () => {
-        console.log('ICE gathering state:', pc.iceGatheringState)
-      }
+    pc.oniceconnectionstatechange = () => {
+      addLog(`ICE connection state: ${pc.iceConnectionState}`)
+    }
 
-      // Step 3: Setup signaling with Firebase
-      console.log('Step 3: Setting up Firebase signaling...')
-      const roomId = `interview_${interviewId}`
-      const roomRef = doc(db, 'videoCalls', roomId)
+    pc.onicegatheringstatechange = () => {
+      addLog(`ICE gathering state: ${pc.iceGatheringState}`)
+    }
+
+    peerConnectionRef.current = pc
+    return pc
+  }
+
+  const joinMeeting = async () => {
+    try {
+      setJoined(true)
+      setStatus('Setting up...')
       
-      console.log('Checking room:', roomId)
-      let roomSnapshot
-      try {
-        roomSnapshot = await getDoc(roomRef)
-        console.log('Room exists:', roomSnapshot.exists())
-        if (roomSnapshot.exists()) {
-          console.log('Room data:', roomSnapshot.data())
-        }
-      } catch (firebaseError) {
-        console.error('Firebase error:', firebaseError)
-        toast.error('Firebase connection error. Check console.')
-        setStatus('Firebase error')
-        return
-      }
+      // Setup local media
+      const localStream = await setupMediaStream()
+      toast.success('Camera ready!')
       
-      if (roomSnapshot.exists() && roomSnapshot.data()?.offer) {
-        // Room exists with offer - join as answerer
-        console.log('=== JOINING AS ANSWERER ===')
-        setStatus('Connecting to host...')
-        await joinAsAnswerer(pc, roomRef, roomSnapshot.data())
+      // Create peer connection
+      const pc = createPeerConnection(localStream)
+      
+      // Setup room reference
+      roomIdRef.current = `room_${interviewId}`
+      const roomRef = doc(db, 'rooms', roomIdRef.current)
+      const callerCandidatesCollection = collection(roomRef, 'callerCandidates')
+      const calleeCandidatesCollection = collection(roomRef, 'calleeCandidates')
+
+      // Check if room exists
+      const roomSnapshot = await getDoc(roomRef)
+      
+      if (!roomSnapshot.exists()) {
+        // CREATE ROOM - We are the caller (first person)
+        await createRoom(pc, roomRef, callerCandidatesCollection, calleeCandidatesCollection)
       } else {
-        // Create new room as offerer
-        console.log('=== CREATING AS OFFERER ===')
-        setStatus('Waiting for participant...')
-        await createAsOfferer(pc, roomRef)
+        // JOIN ROOM - We are the callee (second person)
+        await joinRoom(pc, roomRef, callerCandidatesCollection, calleeCandidatesCollection, roomSnapshot.data())
       }
 
-    } catch (err) {
-      console.error('Join meeting error:', err)
-      toast.error('Failed to join: ' + err.message)
-      setStatus('Error: ' + err.message)
+    } catch (error) {
+      addLog(`Error: ${error.message}`)
+      toast.error('Failed to join: ' + error.message)
+      setStatus('Error')
       setJoined(false)
     }
   }
 
-  const createAsOfferer = async (pc, roomRef) => {
-    // Collect ICE candidates
-    const iceCandidates = []
-    
-    pc.onicecandidate = (event) => {
+  const createRoom = async (pc, roomRef, callerCandidatesCollection, calleeCandidatesCollection) => {
+    addLog('Creating room as caller...')
+    setStatus('Waiting for participant...')
+
+    // Collect ICE candidates for caller
+    pc.onicecandidate = async (event) => {
       if (event.candidate) {
-        console.log('New ICE candidate (offerer)')
-        iceCandidates.push(event.candidate.toJSON())
-        // Update Firestore with new candidate
-        setDoc(roomRef, {
-          offer: pc.localDescription ? { type: pc.localDescription.type, sdp: pc.localDescription.sdp } : null,
-          offerCandidates: iceCandidates,
-          createdAt: Date.now()
-        }, { merge: true }).catch(console.error)
+        addLog('Sending caller ICE candidate')
+        await addDoc(callerCandidatesCollection, event.candidate.toJSON())
       }
     }
 
     // Create offer
-    console.log('Creating offer...')
-    const offer = await pc.createOffer()
-    await pc.setLocalDescription(offer)
-    console.log('Offer created and set as local description')
+    const offerDescription = await pc.createOffer()
+    await pc.setLocalDescription(offerDescription)
+    addLog('Created and set local offer')
 
-    // Save offer to Firestore
-    await setDoc(roomRef, {
-      offer: { type: offer.type, sdp: offer.sdp },
-      offerCandidates: [],
-      createdAt: Date.now()
-    })
-    console.log('Offer saved to Firestore')
+    const roomWithOffer = {
+      offer: {
+        type: offerDescription.type,
+        sdp: offerDescription.sdp
+      },
+      createdAt: new Date().toISOString(),
+      createdBy: user?.uid || 'unknown'
+    }
 
-    // Listen for answer
-    unsubRef.current = onSnapshot(roomRef, async (snapshot) => {
+    await setDoc(roomRef, roomWithOffer)
+    addLog('Room created with offer')
+
+    // Listen for remote answer
+    const unsubRoom = onSnapshot(roomRef, async (snapshot) => {
       const data = snapshot.data()
-      if (!data) return
-
-      // Handle answer
-      if (data.answer && pc.signalingState === 'have-local-offer') {
-        console.log('Received answer')
-        try {
-          await pc.setRemoteDescription(new RTCSessionDescription(data.answer))
-          console.log('Remote description set (answer)')
-        } catch (e) {
-          console.error('Error setting remote description:', e)
-        }
-      }
-
-      // Handle answer ICE candidates
-      if (data.answerCandidates && pc.remoteDescription) {
-        for (const candidate of data.answerCandidates) {
-          try {
-            await pc.addIceCandidate(new RTCIceCandidate(candidate))
-          } catch (e) {
-            // Ignore duplicate candidates
-          }
-        }
+      if (data?.answer && !pc.currentRemoteDescription) {
+        addLog('Received answer from callee')
+        const answerDescription = new RTCSessionDescription(data.answer)
+        await pc.setRemoteDescription(answerDescription)
+        addLog('Set remote description (answer)')
       }
     })
+    unsubscribersRef.current.push(unsubRoom)
+
+    // Listen for callee ICE candidates
+    const unsubCallee = onSnapshot(calleeCandidatesCollection, (snapshot) => {
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === 'added') {
+          addLog('Received callee ICE candidate')
+          const data = change.doc.data()
+          await pc.addIceCandidate(new RTCIceCandidate(data))
+        }
+      })
+    })
+    unsubscribersRef.current.push(unsubCallee)
   }
 
-  const joinAsAnswerer = async (pc, roomRef, roomData) => {
-    // Set remote description (offer)
-    console.log('Setting remote description (offer)...')
-    await pc.setRemoteDescription(new RTCSessionDescription(roomData.offer))
-    console.log('Remote description set')
+  const joinRoom = async (pc, roomRef, callerCandidatesCollection, calleeCandidatesCollection, roomData) => {
+    addLog('Joining room as callee...')
+    setStatus('Connecting...')
 
-    // Add existing offer ICE candidates
-    if (roomData.offerCandidates) {
-      console.log('Adding offer candidates:', roomData.offerCandidates.length)
-      for (const candidate of roomData.offerCandidates) {
-        try {
-          await pc.addIceCandidate(new RTCIceCandidate(candidate))
-        } catch (e) {
-          console.error('Error adding offer candidate:', e)
-        }
-      }
-    }
-
-    // Collect answer ICE candidates
-    const iceCandidates = []
-    
-    pc.onicecandidate = (event) => {
+    // Collect ICE candidates for callee
+    pc.onicecandidate = async (event) => {
       if (event.candidate) {
-        console.log('New ICE candidate (answerer)')
-        iceCandidates.push(event.candidate.toJSON())
-        // Update Firestore with new candidate
-        setDoc(roomRef, {
-          answerCandidates: iceCandidates
-        }, { merge: true }).catch(console.error)
+        addLog('Sending callee ICE candidate')
+        await addDoc(calleeCandidatesCollection, event.candidate.toJSON())
       }
     }
+
+    // Set remote description (offer from caller)
+    const offerDescription = new RTCSessionDescription(roomData.offer)
+    await pc.setRemoteDescription(offerDescription)
+    addLog('Set remote description (offer)')
 
     // Create answer
-    console.log('Creating answer...')
-    const answer = await pc.createAnswer()
-    await pc.setLocalDescription(answer)
-    console.log('Answer created and set as local description')
+    const answerDescription = await pc.createAnswer()
+    await pc.setLocalDescription(answerDescription)
+    addLog('Created and set local answer')
 
-    // Save answer to Firestore
-    await setDoc(roomRef, {
-      answer: { type: answer.type, sdp: answer.sdp },
-      answerCandidates: []
-    }, { merge: true })
-    console.log('Answer saved to Firestore')
+    const roomWithAnswer = {
+      ...roomData,
+      answer: {
+        type: answerDescription.type,
+        sdp: answerDescription.sdp
+      },
+      answeredAt: new Date().toISOString(),
+      answeredBy: user?.uid || 'unknown'
+    }
 
-    // Listen for new offer candidates
-    unsubRef.current = onSnapshot(roomRef, async (snapshot) => {
-      const data = snapshot.data()
-      if (!data) return
+    await updateDoc(roomRef, roomWithAnswer)
+    addLog('Sent answer to caller')
 
-      if (data.offerCandidates && pc.remoteDescription) {
-        for (const candidate of data.offerCandidates) {
-          try {
-            await pc.addIceCandidate(new RTCIceCandidate(candidate))
-          } catch (e) {
-            // Ignore duplicate candidates
-          }
+    // Listen for caller ICE candidates
+    const unsubCaller = onSnapshot(callerCandidatesCollection, (snapshot) => {
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === 'added') {
+          addLog('Received caller ICE candidate')
+          const data = change.doc.data()
+          await pc.addIceCandidate(new RTCIceCandidate(data))
         }
-      }
+      })
     })
+    unsubscribersRef.current.push(unsubCaller)
+  }
+
+  const hangUp = async () => {
+    addLog('Hanging up...')
+    
+    // Stop local stream
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => track.stop())
+      localStreamRef.current = null
+    }
+    
+    // Stop screen share
+    if (screenStreamRef.current) {
+      screenStreamRef.current.getTracks().forEach(track => track.stop())
+      screenStreamRef.current = null
+    }
+
+    // Close peer connection
+    if (peerConnectionRef.current) {
+      peerConnectionRef.current.close()
+      peerConnectionRef.current = null
+    }
+
+    // Unsubscribe from Firestore
+    unsubscribersRef.current.forEach(unsub => unsub())
+    unsubscribersRef.current = []
+
+    // Clear timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+
+    // Delete room from Firestore
+    if (roomIdRef.current) {
+      try {
+        const roomRef = doc(db, 'rooms', roomIdRef.current)
+        
+        // Delete subcollections
+        const callerCandidates = await getDocs(collection(roomRef, 'callerCandidates'))
+        callerCandidates.forEach(async (doc) => await deleteDoc(doc.ref))
+        
+        const calleeCandidates = await getDocs(collection(roomRef, 'calleeCandidates'))
+        calleeCandidates.forEach(async (doc) => await deleteDoc(doc.ref))
+        
+        // Delete room document
+        await deleteDoc(roomRef)
+        addLog('Room deleted')
+      } catch (e) {
+        console.error('Error deleting room:', e)
+      }
+    }
   }
 
   const endCall = async () => {
-    cleanup()
-    
-    try {
-      const roomId = `interview_${interviewId}`
-      await deleteDoc(doc(db, 'videoCalls', roomId))
-      console.log('Room deleted')
-    } catch (e) {
-      console.error('Error deleting room:', e)
-    }
-
+    await hangUp()
     toast.success('Call ended')
     navigate(-1)
   }
 
   const toggleVideo = () => {
     if (localStreamRef.current) {
-      const track = localStreamRef.current.getVideoTracks()[0]
-      if (track) {
-        track.enabled = !track.enabled
-        setIsVideoOn(track.enabled)
+      const videoTrack = localStreamRef.current.getVideoTracks()[0]
+      if (videoTrack) {
+        videoTrack.enabled = !videoTrack.enabled
+        setIsVideoOn(videoTrack.enabled)
       }
     }
   }
 
   const toggleAudio = () => {
     if (localStreamRef.current) {
-      const track = localStreamRef.current.getAudioTracks()[0]
-      if (track) {
-        track.enabled = !track.enabled
-        setIsAudioOn(track.enabled)
+      const audioTrack = localStreamRef.current.getAudioTracks()[0]
+      if (audioTrack) {
+        audioTrack.enabled = !audioTrack.enabled
+        setIsAudioOn(audioTrack.enabled)
       }
     }
   }
 
   const toggleScreenShare = async () => {
     if (isScreenSharing) {
-      // Stop screen sharing
       if (screenStreamRef.current) {
-        screenStreamRef.current.getTracks().forEach(t => t.stop())
+        screenStreamRef.current.getTracks().forEach(track => track.stop())
       }
-      // Replace with camera
-      const track = localStreamRef.current?.getVideoTracks()[0]
-      if (track && pcRef.current) {
-        const sender = pcRef.current.getSenders().find(s => s.track?.kind === 'video')
-        if (sender) sender.replaceTrack(track)
+      const videoTrack = localStreamRef.current?.getVideoTracks()[0]
+      if (videoTrack && peerConnectionRef.current) {
+        const sender = peerConnectionRef.current.getSenders().find(s => s.track?.kind === 'video')
+        if (sender) await sender.replaceTrack(videoTrack)
       }
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = localStreamRef.current
@@ -398,20 +386,20 @@ function VideoCall() {
       setIsScreenSharing(false)
     } else {
       try {
-        const screen = await navigator.mediaDevices.getDisplayMedia({ video: true })
-        screenStreamRef.current = screen
-        const track = screen.getVideoTracks()[0]
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true })
+        screenStreamRef.current = screenStream
+        const screenTrack = screenStream.getVideoTracks()[0]
         
-        if (pcRef.current) {
-          const sender = pcRef.current.getSenders().find(s => s.track?.kind === 'video')
-          if (sender) sender.replaceTrack(track)
+        if (peerConnectionRef.current) {
+          const sender = peerConnectionRef.current.getSenders().find(s => s.track?.kind === 'video')
+          if (sender) await sender.replaceTrack(screenTrack)
         }
         
         if (localVideoRef.current) {
-          localVideoRef.current.srcObject = screen
+          localVideoRef.current.srcObject = screenStream
         }
         
-        track.onended = () => toggleScreenShare()
+        screenTrack.onended = () => toggleScreenShare()
         setIsScreenSharing(true)
       } catch (e) {
         console.error('Screen share error:', e)
@@ -431,15 +419,19 @@ function VideoCall() {
 
   const sendChat = () => {
     if (!chatInput.trim()) return
-    setChatMessages(p => [...p, { 
+    setChatMessages(prev => [...prev, { 
       sender: 'You', 
       text: chatInput, 
-      time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
     }])
     setChatInput('')
   }
 
-  const formatDuration = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`
+  const formatDuration = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
 
   if (loading) {
     return (
@@ -530,17 +522,18 @@ function VideoCall() {
           </div>
 
           <div className="mt-6 p-4 bg-blue-900/30 rounded-xl border border-blue-800">
-            <h3 className="text-blue-400 font-medium mb-2">💡 How to connect</h3>
+            <h3 className="text-blue-400 font-medium mb-2">💡 How it works</h3>
             <ul className="text-sm text-gray-400 space-y-1">
-              <li>1. Click "Join Meeting" and allow camera/microphone</li>
-              <li>2. First person waits, second person connects automatically</li>
-              <li>3. Both participants must click "Join Meeting"</li>
+              <li>1. First person joins and waits</li>
+              <li>2. Second person joins and connects automatically</li>
+              <li>3. Both need to allow camera/microphone</li>
             </ul>
           </div>
         </div>
       </div>
     )
   }
+
 
   // In-call screen
   return (
@@ -569,8 +562,7 @@ function VideoCall() {
           <video 
             ref={remoteVideoRef} 
             autoPlay 
-            playsInline
-            muted={false}
+            playsInline 
             className={`w-full h-full object-cover ${!remoteConnected ? 'hidden' : ''}`}
           />
           {!remoteConnected && (
@@ -580,14 +572,23 @@ function VideoCall() {
                   <Users className="w-16 h-16 text-gray-500" />
                 </div>
                 <p className="text-white text-xl mb-2">{status}</p>
-                <p className="text-gray-400">Waiting for the other participant to join...</p>
-                <p className="text-gray-500 text-sm mt-4">Make sure they also click "Join Meeting"</p>
+                <p className="text-gray-400">Waiting for the other participant...</p>
+                
+                {/* Connection Logs */}
+                <div className="mt-6 max-w-md mx-auto text-left">
+                  <p className="text-gray-500 text-xs mb-2">Connection Log:</p>
+                  <div className="bg-gray-800 rounded-lg p-3 max-h-32 overflow-y-auto">
+                    {connectionLogs.map((log, i) => (
+                      <p key={i} className="text-gray-400 text-xs font-mono">{log}</p>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-          )}}
+          )}
         </div>
 
-        {/* Local Video (Picture-in-Picture) */}
+        {/* Local Video (PiP) */}
         <div className="absolute bottom-4 right-4 w-72 aspect-video bg-gray-800 rounded-xl overflow-hidden shadow-2xl border-2 border-gray-600">
           <video 
             ref={localVideoRef} 
@@ -637,7 +638,7 @@ function VideoCall() {
               <input 
                 value={chatInput} 
                 onChange={e => setChatInput(e.target.value)} 
-                onKeyPress={e => e.key === 'Enter' && sendChat()} 
+                onKeyDown={e => e.key === 'Enter' && sendChat()} 
                 placeholder="Type a message..." 
                 className="flex-1 bg-gray-700 text-white px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
               />
