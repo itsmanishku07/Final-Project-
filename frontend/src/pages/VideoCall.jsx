@@ -148,12 +148,19 @@ function VideoCall() {
       // Handle incoming remote stream
       pc.ontrack = (event) => {
         console.log('=== RECEIVED REMOTE TRACK ===', event.track.kind)
-        if (remoteVideoRef.current && event.streams[0]) {
-          remoteVideoRef.current.srcObject = event.streams[0]
+        console.log('Streams:', event.streams)
+        
+        if (event.streams && event.streams[0]) {
+          console.log('Setting remote video stream')
+          if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = event.streams[0]
+            // Force play
+            remoteVideoRef.current.play().catch(e => console.log('Autoplay prevented:', e))
+          }
           setRemoteConnected(true)
           setStatus('Connected!')
           if (!callStartTime) setCallStartTime(Date.now())
-          toast.success('Connected to remote participant!')
+          toast.success('Connected!')
         }
       }
 
@@ -515,10 +522,7 @@ function VideoCall() {
               <ArrowLeft className="w-5 h-5" /> Go Back
             </button>
             <button 
-              onClick={() => {
-                alert('Join Meeting clicked!')
-                joinMeeting()
-              }} 
+              onClick={joinMeeting} 
               className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold transition-all"
             >
               <Video className="w-5 h-5" /> Join Meeting
@@ -562,14 +566,14 @@ function VideoCall() {
       <div className="flex-1 flex relative overflow-hidden">
         {/* Remote Video (Main) */}
         <div className="flex-1 relative bg-gray-800">
-          {remoteConnected ? (
-            <video 
-              ref={remoteVideoRef} 
-              autoPlay 
-              playsInline 
-              className="w-full h-full object-cover"
-            />
-          ) : (
+          <video 
+            ref={remoteVideoRef} 
+            autoPlay 
+            playsInline
+            muted={false}
+            className={`w-full h-full object-cover ${!remoteConnected ? 'hidden' : ''}`}
+          />
+          {!remoteConnected && (
             <div className="w-full h-full flex items-center justify-center">
               <div className="text-center">
                 <div className="w-32 h-32 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
@@ -580,7 +584,7 @@ function VideoCall() {
                 <p className="text-gray-500 text-sm mt-4">Make sure they also click "Join Meeting"</p>
               </div>
             </div>
-          )}
+          )}}
         </div>
 
         {/* Local Video (Picture-in-Picture) */}
