@@ -25,6 +25,8 @@ class Job:
         self.job_type: Optional[str] = None
         self.salary_min: float = 0.0
         self.salary_max: float = 0.0
+        self.stipend_amount: float = 0.0
+        self.compensation_type: str = 'CTC'  # CTC or Stipend
         self.expires_at: Optional[datetime] = None
         self.active = True
         self.created_at = datetime.now()
@@ -46,6 +48,8 @@ class Job:
             'job_type': self.job_type,
             'salary_min': self.salary_min,
             'salary_max': self.salary_max,
+            'stipend_amount': self.stipend_amount,
+            'compensation_type': self.compensation_type,
             'expires_at': self.expires_at,
             'active': self.active,
             'created_at': self.created_at,
@@ -71,6 +75,8 @@ class Job:
         job.job_type = data.get('job_type')
         job.salary_min = data.get('salary_min', 0.0)
         job.salary_max = data.get('salary_max', 0.0)
+        job.stipend_amount = data.get('stipend_amount', 0.0)
+        job.compensation_type = data.get('compensation_type', 'CTC')
         job.expires_at = data.get('expires_at')
         job.active = data.get('active', True)
         job.created_at = data.get('created_at', datetime.now())
@@ -83,7 +89,8 @@ class Job:
                required_skills: Optional[List[str]] = None, min_experience: Optional[int] = None,
                max_experience: Optional[int] = None, education_level: Optional[str] = None,
                job_type: Optional[str] = None, salary_min: Optional[float] = None,
-               salary_max: Optional[float] = None, expires_at: Optional[datetime] = None):
+               salary_max: Optional[float] = None, stipend_amount: Optional[float] = None,
+               compensation_type: Optional[str] = None, expires_at: Optional[datetime] = None):
         """Update job details"""
         if title is not None:
             self.title = title
@@ -107,6 +114,10 @@ class Job:
             self.salary_min = salary_min
         if salary_max is not None:
             self.salary_max = salary_max
+        if stipend_amount is not None:
+            self.stipend_amount = stipend_amount
+        if compensation_type is not None:
+            self.compensation_type = compensation_type
         if expires_at is not None:
             self.expires_at = expires_at
         

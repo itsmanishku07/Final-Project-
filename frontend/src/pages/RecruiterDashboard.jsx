@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import api from '../services/api'
-import LoadingSpinner from '../components/LoadingSpinner'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 
 /**
  * Recruiter Dashboard
@@ -33,7 +33,7 @@ function RecruiterDashboard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingSpinner size="large" />
+        <AILoadingAnimation message="Loading Dashboard" context="dashboard" size="medium" />
       </div>
     )
   }

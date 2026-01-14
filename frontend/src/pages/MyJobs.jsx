@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import api from '../services/api'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 /**
@@ -152,7 +153,7 @@ function MyJobs() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingSpinner size="large" />
+        <AILoadingAnimation message="Loading Jobs" context="jobs" size="medium" />
       </div>
     )
   }

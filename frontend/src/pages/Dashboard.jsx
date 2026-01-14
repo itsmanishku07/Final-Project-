@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/FirebaseAuthContext'
 import { resumeAPI, jobAPI } from '../services/api'
 import api from '../services/api'
 import { Upload, Briefcase, Users, BarChart3, FileText, Target, TrendingUp, Clock, CheckCircle, Eye } from 'lucide-react'
-import LoadingSpinner from '../components/LoadingSpinner'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 
 // Helper to safely parse dates from backend (handles both ISO strings and invalid values)
 const parseDate = (dateValue) => {
@@ -348,7 +348,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <LoadingSpinner size="large" />
+        <AILoadingAnimation message="Loading Dashboard" context="dashboard" size="medium" />
       </div>
     )
   }

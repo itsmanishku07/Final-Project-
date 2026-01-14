@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import api from '../services/api'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 /**
@@ -163,7 +164,7 @@ function ResumeUpload() {
   }
 
   if (loading) {
-    return <LoadingSpinner />
+    return <div className="flex justify-center items-center min-h-[400px]"><AILoadingAnimation message="Loading Resumes" context="resume" size="medium" /></div>
   }
 
   return (
