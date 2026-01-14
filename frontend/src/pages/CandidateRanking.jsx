@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import api from '../services/api'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 /**
@@ -212,8 +213,8 @@ function CandidateRanking() {
           </div>
           
           {loading ? (
-            <div className="p-8">
-              <LoadingSpinner />
+            <div className="p-8 flex justify-center">
+              <AILoadingAnimation message="Loading Candidates" context="applications" size="medium" showFacts={false} />
             </div>
           ) : matches.length === 0 ? (
             <div className="p-6 text-center text-gray-500">

@@ -6,30 +6,24 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Environment files
 .env
 .env.local
 .env.*.local
 !.env.example
 !.env.vercel.example
 
-# Firebase credentials (NEVER commit these!)
 firebase-service-account.json
 *-service-account.json
 *.json.bak
 
-# Logs
 logs/
 *.log
 
-# Python virtual environment
 venv/
 env/
 .venv/
 
-# OS files
 .DS_Store
 Thumbs.db
 
-# Vercel
 .vercel

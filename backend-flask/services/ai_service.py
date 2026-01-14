@@ -532,27 +532,138 @@ class DemoAIAnalysisService(AIAnalysisInterface):
         )
 
 class ProductionAIAnalysisService(AIAnalysisInterface):
-    """Production AI service - uses smart rule-based analysis"""
+    """Production AI service - uses Databricks LLM with fallback to rule-based analysis"""
     
     def __init__(self):
         self.api_url = os.getenv('DATABRICKS_API_URL')
         self.token = os.getenv('DATABRICKS_TOKEN')
         self.model_endpoint = os.getenv('DATABRICKS_MODEL_ENDPOINT')
-        logger.info("Production AI Analysis Service initialized")
+        
+        if self.api_url and self.token and self.model_endpoint:
+            logger.info("Production AI Service initialized with Databricks LLM")
+        else:
+            logger.warning("Databricks credentials not fully configured, using fallback analysis")
+    
+    def _call_databricks_llm(self, prompt: str, system_prompt: str = None, max_tokens: int = 2000) -> str:
+        """Call Databricks LLM API and return the response text"""
+        if not self.api_url or not self.token or not self.model_endpoint:
+            return None
+        
+        headers = {
+            'Authorization': f'Bearer {self.token}',
+            'Content-Type': 'application/json'
+        }
+        
+        messages = []
+        if system_prompt:
+            messages.append({'role': 'system', 'content': system_prompt})
+        messages.append({'role': 'user', 'content': prompt})
+        
+        payload = {
+            'messages': messages,
+            'max_tokens': max_tokens,
+            'temperature': 0.3
+        }
+        
+        try:
+            url = f"{self.api_url}{self.model_endpoint}/invocations"
+            response = requests.post(url, headers=headers, json=payload, timeout=60)
+            response.raise_for_status()
+            
+            result = response.json()
+            content = result.get('choices', [{}])[0].get('message', {}).get('content', '')
+            return content
+        except Exception as e:
+            logger.error(f"Databricks LLM call failed: {e}")
+            return None
+    
+    def _parse_json_response(self, response_text: str) -> Any:
+        """Parse JSON from LLM response, handling markdown code blocks"""
+        if not response_text:
+            return None
+        
+        try:
+            text = response_text.strip()
+            
+            # Remove markdown code blocks if present
+            if '```json' in text:
+                text = text.split('```json')[1].split('```')[0]
+            elif '```' in text:
+                text = text.split('```')[1].split('```')[0]
+            
+            return json.loads(text.strip())
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse LLM JSON response: {e}")
+            
+            # Try to extract JSON from response
+            try:
+                json_match = re.search(r'[\[{].*[\]}]', response_text, re.DOTALL)
+                if json_match:
+                    return json.loads(json_match.group())
+            except:
+                pass
+            
+            return None
     
     def analyze_resume(self, resume_text: str) -> AIAnalysisResponse:
-        """Analyze resume using smart rule-based extraction"""
+        """Analyze resume using Databricks LLM with fallback"""
         logger.info(f"Analyzing resume text (length: {len(resume_text)})")
         
-        # Use smart extraction instead of external API
+        # Try Databricks LLM first
+        prompt = f"""Analyze this resume and extract information. Return ONLY valid JSON with no markdown formatting.
+
+Resume Text:
+{resume_text[:4000]}
+
+Return JSON in this exact format:
+{{
+    "skills": ["skill1", "skill2", "skill3"],
+    "experience_years": 5,
+    "education": "Bachelor's Degree in Computer Science",
+    "contact_info": {{
+        "email": "email@example.com",
+        "phone": "+1234567890",
+        "linkedin": "linkedin.com/in/username",
+        "github": "github.com/username",
+        "location": "City, Country",
+        "name": "Full Name"
+    }},
+    "summary": "Brief professional summary"
+}}
+
+Rules:
+- Extract ALL technical and soft skills mentioned
+- Calculate total years of experience from work history
+- Identify highest education level
+- Extract contact information if present (leave empty string if not found)
+- Be accurate and thorough"""
+
+        system_prompt = "You are an expert resume analyzer. Extract information accurately and return valid JSON only."
+        
+        response = self._call_databricks_llm(prompt, system_prompt)
+        result = self._parse_json_response(response)
+        
+        if result:
+            logger.info("Resume analyzed using Databricks LLM")
+            return AIAnalysisResponse(
+                skills=result.get('skills', []),
+                experience_years=result.get('experience_years', 0),
+                education=result.get('education', ''),
+                matched_skills=[],
+                missing_skills=[],
+                similarity_score=0,
+                reasoning=result.get('summary', 'Resume analyzed successfully'),
+                contact_info=result.get('contact_info', {})
+            )
+        
+        # Fallback to rule-based extraction
+        logger.info("Using fallback rule-based resume analysis")
         skills = self._extract_skills_from_text(resume_text)
         experience_years = self._estimate_experience(resume_text)
         education = self._estimate_education(resume_text)
         contact_info = self._extract_contact_info(resume_text)
         
         reasoning = f"Resume analysis completed. Found {len(skills)} skills, {experience_years} years experience, {education}."
-        
-        logger.info(f"Resume analysis completed - {len(skills)} skills, {experience_years} years experience")
         
         return AIAnalysisResponse(
             skills=skills,
@@ -567,10 +678,60 @@ class ProductionAIAnalysisService(AIAnalysisInterface):
     
     def analyze_resume_for_job(self, resume_text: str, job_description: str, 
                               required_skills: List[str]) -> AIAnalysisResponse:
-        """Analyze resume for job using smart matching"""
+        """Analyze resume for job using Databricks LLM with fallback"""
         logger.info(f"Performing job matching for {len(required_skills)} required skills")
         
-        # Extract candidate info
+        skills_str = ", ".join(required_skills) if required_skills else "Not specified"
+        
+        # Try Databricks LLM first
+        prompt = f"""Analyze this resume against the job requirements. Return ONLY valid JSON.
+
+RESUME:
+{resume_text[:3000]}
+
+JOB DESCRIPTION:
+{job_description[:1500]}
+
+REQUIRED SKILLS: {skills_str}
+
+Return JSON in this exact format:
+{{
+    "skills": ["all", "candidate", "skills"],
+    "experience_years": 5,
+    "education": "Highest education level",
+    "matched_skills": ["skills", "that", "match", "requirements"],
+    "missing_skills": ["required", "skills", "candidate", "lacks"],
+    "similarity_score": 75.5,
+    "reasoning": "Detailed explanation of match quality and recommendations"
+}}
+
+Rules:
+- similarity_score should be 0-100 based on overall fit
+- matched_skills are skills from required_skills that candidate has
+- missing_skills are skills from required_skills that candidate lacks
+- Be thorough in skill matching (consider synonyms and related technologies)
+- Provide actionable reasoning"""
+
+        system_prompt = "You are an expert recruiter analyzing candidate fit. Be thorough and accurate. Return valid JSON only."
+        
+        response = self._call_databricks_llm(prompt, system_prompt)
+        result = self._parse_json_response(response)
+        
+        if result:
+            logger.info("Job matching completed using Databricks LLM")
+            return AIAnalysisResponse(
+                skills=result.get('skills', []),
+                experience_years=result.get('experience_years', 0),
+                education=result.get('education', ''),
+                matched_skills=result.get('matched_skills', []),
+                missing_skills=result.get('missing_skills', []),
+                similarity_score=result.get('similarity_score', 0),
+                reasoning=result.get('reasoning', ''),
+                contact_info=self._extract_contact_info(resume_text)
+            )
+        
+        # Fallback to rule-based matching
+        logger.info("Using fallback rule-based job matching")
         candidate_skills = self._extract_skills_from_text(resume_text)
         experience_years = self._estimate_experience(resume_text)
         education = self._estimate_education(resume_text)
@@ -813,84 +974,60 @@ class ProductionAIAnalysisService(AIAnalysisInterface):
         return "Bachelor's Degree"  # Default assumption
     
     def get_resume_suggestions(self, resume_text: str) -> ResumeSuggestions:
-        """Get AI-powered resume suggestions using Databricks"""
-        logger.info("Getting resume suggestions from Databricks AI")
+        """Get AI-powered resume suggestions using Databricks LLM with fallback"""
+        logger.info("Getting resume suggestions")
         
-        # Try Databricks API first
-        if self.api_url and self.token:
-            try:
-                suggestions = self._get_databricks_suggestions(resume_text)
-                if suggestions:
-                    return suggestions
-            except Exception as e:
-                logger.warning(f"Databricks API failed, using fallback: {e}")
-        
-        # Fallback to smart rule-based suggestions
-        return self._get_rule_based_suggestions(resume_text)
-    
-    def _get_databricks_suggestions(self, resume_text: str) -> ResumeSuggestions:
-        """Call Databricks AI for resume suggestions"""
         # Always calculate ATS score locally for accuracy
         ats_score = self._calculate_ats_score(resume_text)
         
-        prompt = f"""Analyze this resume and provide improvement suggestions in JSON format:
+        # Try Databricks LLM
+        prompt = f"""Analyze this resume and provide improvement suggestions. Return ONLY valid JSON.
 
 Resume:
-{resume_text[:3000]}
+{resume_text[:3500]}
 
-Respond with ONLY valid JSON in this exact format:
+Return JSON in this exact format:
 {{
-    "spelling_errors": [{{"word": "misspelled", "suggestion": "correct", "context": "sentence with error"}}],
+    "spelling_errors": [
+        {{"word": "misspelled_word", "suggestion": "correct_word", "context": "sentence containing error"}}
+    ],
+    "grammar_errors": [
+        {{"error": "description of error", "suggestion": "how to fix it"}}
+    ],
     "missing_sections": ["section names that should be added"],
-    "keyword_suggestions": ["industry keywords to add"],
+    "keyword_suggestions": ["industry keywords to add for better ATS"],
     "formatting_tips": ["specific formatting improvements"],
-    "overall_score": 75,
-    "summary": "Brief overall assessment"
-}}"""
+    "content_improvements": ["suggestions to improve content quality"],
+    "summary": "Overall assessment and top 3 priorities for improvement"
+}}
 
-        headers = {
-            'Authorization': f'Bearer {self.token}',
-            'Content-Type': 'application/json'
-        }
+Rules:
+- Check for actual spelling mistakes (not technical terms)
+- Identify grammar issues
+- Suggest missing standard resume sections
+- Recommend relevant industry keywords
+- Be specific and actionable in suggestions"""
+
+        system_prompt = "You are a professional resume reviewer. Analyze resumes and provide actionable improvement suggestions. Return valid JSON only."
         
-        payload = {
-            'messages': [
-                {'role': 'system', 'content': 'You are a professional resume reviewer. Analyze resumes and provide actionable improvement suggestions. Always respond with valid JSON only.'},
-                {'role': 'user', 'content': prompt}
-            ],
-            'max_tokens': 1500,
-            'temperature': 0.3
-        }
+        response = self._call_databricks_llm(prompt, system_prompt)
+        result = self._parse_json_response(response)
         
-        url = f"{self.api_url}{self.model_endpoint}/invocations"
-        response = requests.post(url, headers=headers, json=payload, timeout=30)
-        response.raise_for_status()
-        
-        result = response.json()
-        content = result.get('choices', [{}])[0].get('message', {}).get('content', '{}')
-        
-        # Parse JSON from response
-        try:
-            # Clean up response - extract JSON if wrapped in markdown
-            if '```json' in content:
-                content = content.split('```json')[1].split('```')[0]
-            elif '```' in content:
-                content = content.split('```')[1].split('```')[0]
-            
-            data = json.loads(content.strip())
-            
+        if result:
+            logger.info("Resume suggestions generated using Databricks LLM")
             return ResumeSuggestions(
-                spelling_errors=data.get('spelling_errors', []),
-                missing_sections=data.get('missing_sections', []),
-                keyword_suggestions=data.get('keyword_suggestions', []),
-                formatting_tips=data.get('formatting_tips', []),
-                overall_score=ats_score['total_score'],  # Use calculated ATS score
-                summary=data.get('summary', 'Resume analyzed successfully.'),
-                ats_score=ats_score  # Include full ATS score breakdown
+                spelling_errors=result.get('spelling_errors', []),
+                missing_sections=result.get('missing_sections', []),
+                keyword_suggestions=result.get('keyword_suggestions', []),
+                formatting_tips=result.get('formatting_tips', []) + result.get('content_improvements', []),
+                overall_score=ats_score['total_score'],
+                summary=result.get('summary', ''),
+                ats_score=ats_score
             )
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse Databricks response: {e}")
-            raise
+        
+        # Fallback to smart rule-based suggestions
+        logger.info("Using fallback rule-based suggestions")
+        return self._get_rule_based_suggestions(resume_text)
     
     def _get_rule_based_suggestions(self, resume_text: str) -> ResumeSuggestions:
         """Generate suggestions using smart rule-based analysis with ATS scoring"""
@@ -1302,428 +1439,82 @@ Respond with ONLY valid JSON in this exact format:
     def generate_interview_questions(self, resume_text: str, job_description: str, 
                                      required_skills: List[str], candidate_skills: List[str],
                                      experience_years: int) -> List[Dict]:
-        """Generate AI-powered interview questions based on candidate profile and job requirements"""
-        logger.info("Generating interview questions")
+        """Generate AI-powered interview questions using Databricks LLM only"""
+        logger.info("Generating interview questions using Databricks LLM")
         
-        questions = []
+        skills_str = ", ".join(candidate_skills[:15]) if candidate_skills else "Not specified"
+        required_str = ", ".join(required_skills) if required_skills else "Not specified"
         
-        # 1. Technical Skills Questions (based on matched skills)
-        matched_skills = [s for s in candidate_skills if any(
-            s.lower() in req.lower() or req.lower() in s.lower() 
-            for req in required_skills
-        )]
-        
-        # Shuffle matched skills for variety on refresh
-        import random
-        shuffled_skills = matched_skills.copy()
-        random.shuffle(shuffled_skills)
-        
-        skill_questions = self._generate_skill_questions(shuffled_skills, experience_years)
-        questions.extend(skill_questions)
-        
-        # 2. Experience-based Questions
-        exp_questions = self._generate_experience_questions(resume_text, experience_years)
-        questions.extend(exp_questions)
-        
-        # 3. Job-specific Questions
-        job_questions = self._generate_job_questions(job_description, required_skills)
-        questions.extend(job_questions)
-        
-        # 4. Behavioral Questions
-        behavioral_questions = self._generate_behavioral_questions(experience_years)
-        questions.extend(behavioral_questions)
-        
-        # 5. Gap Analysis Questions (for missing skills)
+        # Identify skill gaps
         missing_skills = [s for s in required_skills if not any(
             s.lower() in cs.lower() or cs.lower() in s.lower() 
             for cs in candidate_skills
         )]
-        if missing_skills:
-            random.shuffle(missing_skills)
-            gap_questions = self._generate_gap_questions(missing_skills)
-            questions.extend(gap_questions)
+        missing_str = ", ".join(missing_skills) if missing_skills else "None"
         
-        # Shuffle all questions for variety
-        random.shuffle(questions)
+        prompt = f"""You are an expert technical interviewer. Generate personalized interview questions for this specific candidate.
+
+CANDIDATE PROFILE:
+- Years of Experience: {experience_years}
+- Candidate Skills: {skills_str}
+- Resume Content: {resume_text[:2500]}
+
+JOB REQUIREMENTS:
+- Job Description: {job_description[:1200]}
+- Required Skills: {required_str}
+- Skills Gap (candidate is missing): {missing_str}
+
+INSTRUCTIONS:
+Generate 12-15 unique, thoughtful interview questions tailored to THIS specific candidate. 
+
+Question Categories to Include:
+1. TECHNICAL (5-6 questions): Deep-dive questions on candidate's listed skills. Ask about specific technologies they know.
+2. BEHAVIORAL (3-4 questions): Situational questions appropriate for their experience level ({experience_years} years).
+3. EXPERIENCE (2-3 questions): Questions about their past work, projects, and achievements mentioned in resume.
+4. GAP ANALYSIS (1-2 questions): Questions about skills they're missing but the job requires: {missing_str}
+
+For each question provide:
+- A specific, non-generic question
+- Expected answer points the interviewer should look for
+- Difficulty level based on candidate's experience
+- Category and related skill
+
+Return ONLY a valid JSON array with this exact structure:
+[
+    {{
+        "question": "Your specific interview question here",
+        "expected_answer": "Key points to look for in a good answer",
+        "difficulty": "Easy|Medium|Hard",
+        "category": "Technical|Behavioral|Experience|Gap Analysis",
+        "skill": "Related skill or competency"
+    }}
+]
+
+IMPORTANT: 
+- Questions must be SPECIFIC to this candidate's background, not generic
+- Technical questions should reference actual skills from their resume
+- Adjust difficulty based on {experience_years} years of experience
+- Expected answers should help the interviewer evaluate responses
+- Return ONLY the JSON array, no other text"""
+
+        system_prompt = "You are a senior technical interviewer with expertise in software engineering hiring. Generate highly relevant, personalized interview questions. Always return valid JSON array only."
         
-        return questions[:15]  # Return top 15 questions
-    
-    def _generate_skill_questions(self, skills: List[str], experience_years: int) -> List[Dict]:
-        """Generate technical questions based on candidate's skills"""
-        import random
-        questions = []
+        response = self._call_databricks_llm(prompt, system_prompt, max_tokens=4000)
+        result = self._parse_json_response(response)
         
-        # Multiple questions per skill for variety on refresh
-        skill_question_templates = {
-            'python': [
-                {
-                    'question': "Can you explain the difference between lists and tuples in Python? When would you use each?",
-                    'expected_answer': "Lists are mutable (can be modified), tuples are immutable. Use tuples for fixed data like coordinates, database records. Use lists when you need to modify the collection.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What are Python decorators and how would you use them?",
-                    'expected_answer': "Decorators are functions that modify the behavior of other functions. They use @decorator syntax. Common uses: logging, authentication, caching, timing. They wrap functions to add functionality without modifying the original code.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "Explain the Global Interpreter Lock (GIL) in Python. How does it affect multithreading?",
-                    'expected_answer': "GIL is a mutex that allows only one thread to execute Python bytecode at a time. It affects CPU-bound multithreading performance. Use multiprocessing for CPU-bound tasks, threading for I/O-bound tasks.",
-                    'difficulty': 'Hard'
-                }
-            ],
-            'java': [
-                {
-                    'question': "Explain the concept of garbage collection in Java. How does it work?",
-                    'expected_answer': "Garbage collection automatically manages memory by identifying and removing objects no longer in use. JVM uses algorithms like Mark-and-Sweep to find unreachable objects and free their memory.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is the difference between abstract classes and interfaces in Java?",
-                    'expected_answer': "Abstract classes can have implemented methods and state, single inheritance. Interfaces define contracts with default methods (Java 8+), multiple inheritance. Use abstract for 'is-a' relationships, interfaces for 'can-do' capabilities.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "Explain Java's memory model and the difference between stack and heap.",
-                    'expected_answer': "Stack stores method calls and local variables (fast, LIFO). Heap stores objects and instance variables (slower, garbage collected). Primitives on stack, objects on heap with references on stack.",
-                    'difficulty': 'Hard'
-                }
-            ],
-            'javascript': [
-                {
-                    'question': "What is the difference between 'let', 'const', and 'var' in JavaScript?",
-                    'expected_answer': "'var' is function-scoped and hoisted. 'let' is block-scoped and not hoisted. 'const' is block-scoped and cannot be reassigned. Modern JS prefers 'const' by default, 'let' when reassignment needed.",
-                    'difficulty': 'Easy'
-                },
-                {
-                    'question': "Explain closures in JavaScript with an example use case.",
-                    'expected_answer': "A closure is a function that remembers its outer scope even after the outer function returns. Use cases: data privacy, function factories, callbacks. Inner function 'closes over' outer variables.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is the difference between == and === in JavaScript?",
-                    'expected_answer': "== performs type coercion before comparison (loose equality). === compares both value and type without coercion (strict equality). Always prefer === to avoid unexpected type conversions.",
-                    'difficulty': 'Easy'
-                }
-            ],
-            'react': [
-                {
-                    'question': "Explain the concept of React hooks. What problems do they solve?",
-                    'expected_answer': "Hooks allow using state and lifecycle features in functional components. They solve code reuse issues, complex component hierarchies, and confusing class components. Common hooks: useState, useEffect, useContext.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is the Virtual DOM and how does React use it for performance?",
-                    'expected_answer': "Virtual DOM is a lightweight copy of the real DOM. React compares virtual DOM changes (diffing), calculates minimal updates needed, and batches real DOM updates. This reduces expensive DOM operations.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "Explain the useEffect hook and its cleanup function.",
-                    'expected_answer': "useEffect handles side effects in functional components (data fetching, subscriptions, DOM manipulation). Cleanup function runs before component unmounts or before next effect. Return cleanup function to prevent memory leaks.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'node.js': [
-                {
-                    'question': "How does Node.js handle asynchronous operations? Explain the event loop.",
-                    'expected_answer': "Node.js uses a single-threaded event loop with non-blocking I/O. The event loop processes callbacks from the callback queue when the call stack is empty. This enables handling many concurrent connections efficiently.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is the difference between process.nextTick() and setImmediate()?",
-                    'expected_answer': "process.nextTick() executes before the event loop continues (microtask queue). setImmediate() executes in the check phase of the event loop. nextTick has higher priority but can starve I/O if overused.",
-                    'difficulty': 'Hard'
-                }
-            ],
-            'sql': [
-                {
-                    'question': "What is the difference between INNER JOIN and LEFT JOIN? Give an example use case.",
-                    'expected_answer': "INNER JOIN returns only matching rows from both tables. LEFT JOIN returns all rows from left table plus matching rows from right (NULL if no match). Use LEFT JOIN when you need all records from one table regardless of matches.",
-                    'difficulty': 'Easy'
-                },
-                {
-                    'question': "Explain database indexing. When would you create an index?",
-                    'expected_answer': "Indexes speed up data retrieval by creating a sorted data structure. Create indexes on frequently queried columns, WHERE clause columns, JOIN columns. Avoid over-indexing as it slows writes and uses storage.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is database normalization? Explain the first three normal forms.",
-                    'expected_answer': "Normalization reduces data redundancy. 1NF: atomic values, no repeating groups. 2NF: 1NF + no partial dependencies. 3NF: 2NF + no transitive dependencies. Balance normalization with query performance needs.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'docker': [
-                {
-                    'question': "What is the difference between a Docker image and a container?",
-                    'expected_answer': "An image is a read-only template with instructions for creating a container. A container is a runnable instance of an image. Images are built from Dockerfiles, containers are created from images.",
-                    'difficulty': 'Easy'
-                },
-                {
-                    'question': "How do you optimize Docker image size?",
-                    'expected_answer': "Use multi-stage builds, smaller base images (alpine), combine RUN commands, remove unnecessary files, use .dockerignore, avoid installing dev dependencies in production images.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'kubernetes': [
-                {
-                    'question': "Explain the concept of Pods in Kubernetes. Why not just use containers directly?",
-                    'expected_answer': "A Pod is the smallest deployable unit, containing one or more containers that share storage and network. Pods provide abstraction for co-located containers, shared resources, and lifecycle management that raw containers don't offer.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is the difference between a Deployment and a StatefulSet?",
-                    'expected_answer': "Deployments manage stateless applications with interchangeable pods. StatefulSets manage stateful applications with stable network identities, persistent storage, and ordered deployment/scaling. Use StatefulSets for databases.",
-                    'difficulty': 'Hard'
-                }
-            ],
-            'aws': [
-                {
-                    'question': "Describe a scenario where you would use AWS Lambda vs EC2.",
-                    'expected_answer': "Use Lambda for event-driven, short-running tasks (API endpoints, file processing) - pay per execution, auto-scales. Use EC2 for long-running processes, specific OS requirements, or when you need persistent state.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "Explain the difference between S3 storage classes and when to use each.",
-                    'expected_answer': "Standard: frequently accessed. Intelligent-Tiering: unknown patterns. Standard-IA: infrequent access. Glacier: archival (minutes to hours retrieval). Glacier Deep Archive: long-term archive (12+ hours). Choose based on access patterns and cost.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'machine learning': [
-                {
-                    'question': "Explain the difference between supervised and unsupervised learning with examples.",
-                    'expected_answer': "Supervised learning uses labeled data to predict outcomes (spam detection, price prediction). Unsupervised learning finds patterns in unlabeled data (customer segmentation, anomaly detection). Semi-supervised combines both.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "What is overfitting and how do you prevent it?",
-                    'expected_answer': "Overfitting is when a model learns training data too well, including noise, and performs poorly on new data. Prevent with: cross-validation, regularization (L1/L2), dropout, early stopping, more training data, simpler models.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'git': [
-                {
-                    'question': "How would you resolve a merge conflict in Git? Walk me through the process.",
-                    'expected_answer': "1) Pull latest changes, 2) Git marks conflicts in files, 3) Open files and manually resolve conflicts between <<<< and >>>> markers, 4) Stage resolved files with git add, 5) Complete merge with git commit.",
-                    'difficulty': 'Easy'
-                },
-                {
-                    'question': "What is the difference between git merge and git rebase?",
-                    'expected_answer': "Merge creates a new commit combining branches, preserving history. Rebase moves commits to a new base, creating linear history. Use merge for shared branches, rebase for local cleanup before pushing.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'rest api': [
-                {
-                    'question': "What are the key principles of RESTful API design?",
-                    'expected_answer': "Stateless communication, uniform interface (HTTP methods), resource-based URLs, proper status codes, HATEOAS (hypermedia links). Use nouns for resources, HTTP verbs for actions, proper versioning.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "How do you handle API versioning and why is it important?",
-                    'expected_answer': "Versioning allows API evolution without breaking clients. Methods: URL path (/v1/), query param (?version=1), header (Accept-Version). URL path is most common. Important for backward compatibility and gradual migration.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'mongodb': [
-                {
-                    'question': "When would you choose MongoDB over a relational database?",
-                    'expected_answer': "Choose MongoDB for: flexible/evolving schemas, document-oriented data, horizontal scaling needs, rapid development. Choose relational for: complex transactions, strict data integrity, complex joins, ACID compliance.",
-                    'difficulty': 'Medium'
-                },
-                {
-                    'question': "Explain MongoDB's aggregation pipeline with an example.",
-                    'expected_answer': "Aggregation pipeline processes documents through stages: $match (filter), $group (aggregate), $sort, $project (reshape), $lookup (join). Example: group sales by product, calculate totals, sort by revenue.",
-                    'difficulty': 'Medium'
-                }
-            ],
-            'agile': [
-                {
-                    'question': "Describe your experience with Agile methodology. How do you handle changing requirements?",
-                    'expected_answer': "Agile embraces change through iterative development, sprint planning, daily standups, and retrospectives. Handle changes by prioritizing backlog, breaking into smaller stories, and maintaining communication with stakeholders.",
-                    'difficulty': 'Easy'
-                },
-                {
-                    'question': "What is the difference between Scrum and Kanban?",
-                    'expected_answer': "Scrum uses fixed sprints, defined roles (Scrum Master, PO), sprint planning/review. Kanban uses continuous flow, WIP limits, no fixed iterations. Scrum for predictable delivery, Kanban for continuous delivery and support.",
-                    'difficulty': 'Easy'
-                }
-            ]
-        }
+        if result and isinstance(result, list) and len(result) > 0:
+            logger.info(f"Generated {len(result)} questions using Databricks LLM")
+            return result
         
-        for skill in skills[:5]:  # Limit to 5 skill questions
-            skill_lower = skill.lower()
-            for key, q_list in skill_question_templates.items():
-                if key in skill_lower or skill_lower in key:
-                    # Randomly select one question from the list
-                    q_data = random.choice(q_list)
-                    questions.append({
-                        'question': q_data['question'],
-                        'expected_answer': q_data['expected_answer'],
-                        'difficulty': q_data['difficulty'],
-                        'category': 'Technical',
-                        'skill': skill
-                    })
-                    break
-        
-        return questions
-    
-    def _generate_experience_questions(self, resume_text: str, experience_years: int) -> List[Dict]:
-        """Generate questions based on experience level"""
-        questions = []
-        
-        if experience_years >= 5:
-            questions.append({
-                'question': "Describe a complex technical challenge you faced and how you led your team to solve it.",
-                'expected_answer': "Look for: clear problem definition, leadership approach, technical decision-making, team coordination, measurable outcome. Senior candidates should demonstrate strategic thinking and mentorship.",
-                'difficulty': 'Hard',
-                'category': 'Experience',
-                'skill': 'Leadership'
-            })
-            questions.append({
-                'question': "How do you approach system design for scalability? Give a specific example.",
-                'expected_answer': "Should cover: load balancing, caching strategies, database sharding, microservices, async processing. Look for real-world examples with specific numbers (users, requests/sec).",
-                'difficulty': 'Hard',
-                'category': 'Technical',
-                'skill': 'System Design'
-            })
-        elif experience_years >= 2:
-            questions.append({
-                'question': "Tell me about a project where you had to learn a new technology quickly. How did you approach it?",
-                'expected_answer': "Look for: structured learning approach, documentation reading, hands-on practice, seeking help when needed, applying knowledge to solve real problems.",
-                'difficulty': 'Medium',
-                'category': 'Experience',
-                'skill': 'Learning Ability'
-            })
-        else:
-            questions.append({
-                'question': "What personal or academic projects have you worked on? What did you learn?",
-                'expected_answer': "Look for: passion for technology, self-initiative, problem-solving approach, willingness to learn, understanding of fundamentals.",
-                'difficulty': 'Easy',
-                'category': 'Experience',
-                'skill': 'Initiative'
-            })
-        
-        return questions
-    
-    def _generate_job_questions(self, job_description: str, required_skills: List[str]) -> List[Dict]:
-        """Generate questions specific to the job requirements"""
-        questions = []
-        job_lower = job_description.lower()
-        
-        if 'team' in job_lower or 'collaborate' in job_lower:
-            questions.append({
-                'question': "Describe your experience working in a team environment. How do you handle disagreements?",
-                'expected_answer': "Look for: communication skills, respect for others' opinions, conflict resolution, focus on team goals over personal preferences, examples of successful collaboration.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Teamwork'
-            })
-        
-        if 'deadline' in job_lower or 'fast-paced' in job_lower:
-            questions.append({
-                'question': "How do you prioritize tasks when facing multiple deadlines?",
-                'expected_answer': "Look for: prioritization frameworks (urgency/importance matrix), communication with stakeholders, breaking down tasks, time management techniques, handling pressure.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Time Management'
-            })
-        
-        if 'customer' in job_lower or 'client' in job_lower:
-            questions.append({
-                'question': "Tell me about a time you had to explain a technical concept to a non-technical stakeholder.",
-                'expected_answer': "Look for: ability to simplify complex concepts, use of analogies, patience, checking for understanding, adapting communication style.",
-                'difficulty': 'Medium',
-                'category': 'Communication',
-                'skill': 'Communication'
-            })
-        
-        return questions
-    
-    def _generate_behavioral_questions(self, experience_years: int) -> List[Dict]:
-        """Generate behavioral/situational questions"""
-        import random
-        
-        all_behavioral_questions = [
-            {
-                'question': "Tell me about a time when you made a mistake at work. How did you handle it?",
-                'expected_answer': "Look for: ownership of mistake, quick action to fix, communication with affected parties, learning from the experience, preventive measures implemented.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Accountability'
-            },
-            {
-                'question': "Describe a situation where you had to work with limited resources or tight constraints.",
-                'expected_answer': "Look for: creativity, prioritization, resourcefulness, communication about constraints, delivering value despite limitations.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Problem Solving'
-            },
-            {
-                'question': "Tell me about a time you received critical feedback. How did you respond?",
-                'expected_answer': "Look for: openness to feedback, emotional maturity, concrete actions taken to improve, follow-up with feedback giver, growth mindset.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Growth Mindset'
-            },
-            {
-                'question': "Describe a situation where you had to meet a tight deadline. What was your approach?",
-                'expected_answer': "Look for: prioritization, time management, communication with stakeholders, quality vs speed tradeoffs, stress management.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Time Management'
-            },
-            {
-                'question': "Tell me about a time you disagreed with a colleague or manager. How did you handle it?",
-                'expected_answer': "Look for: respectful communication, focus on facts not emotions, willingness to understand other perspectives, finding common ground, professional resolution.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Conflict Resolution'
-            },
-            {
-                'question': "Describe a project that didn't go as planned. What did you learn from it?",
-                'expected_answer': "Look for: honest assessment of what went wrong, personal accountability, lessons learned, changes implemented for future projects.",
-                'difficulty': 'Medium',
-                'category': 'Behavioral',
-                'skill': 'Learning from Failure'
-            }
-        ]
-        
-        if experience_years >= 3:
-            all_behavioral_questions.extend([
-                {
-                    'question': "Have you ever had to push back on a requirement? How did you handle it?",
-                    'expected_answer': "Look for: professional communication, data-driven arguments, proposing alternatives, understanding business needs while advocating for technical best practices.",
-                    'difficulty': 'Medium',
-                    'category': 'Behavioral',
-                    'skill': 'Communication'
-                },
-                {
-                    'question': "Tell me about a time you mentored or helped a junior team member.",
-                    'expected_answer': "Look for: patience, teaching ability, investment in others' growth, specific examples of guidance provided, measurable improvement in mentee.",
-                    'difficulty': 'Medium',
-                    'category': 'Behavioral',
-                    'skill': 'Mentorship'
-                }
-            ])
-        
-        # Randomly select 2 behavioral questions
-        random.shuffle(all_behavioral_questions)
-        return all_behavioral_questions[:2]
-    
-    def _generate_gap_questions(self, missing_skills: List[str]) -> List[Dict]:
-        """Generate questions about skills the candidate may be missing"""
-        questions = []
-        
-        for skill in missing_skills[:2]:  # Limit to 2 gap questions
-            questions.append({
-                'question': f"This role requires {skill}. While it's not prominent in your resume, do you have any experience with it?",
-                'expected_answer': f"Look for: any related experience, willingness to learn, transferable skills, concrete plan to acquire the skill if hired.",
-                'difficulty': 'Medium',
-                'category': 'Gap Analysis',
-                'skill': skill
-            })
-        
-        return questions
+        # If Databricks fails, return error message as a question to indicate the issue
+        logger.error("Databricks LLM failed to generate interview questions")
+        return [{
+            "question": "Unable to generate AI-powered questions at this time. Please try again.",
+            "expected_answer": "System is experiencing issues connecting to AI service.",
+            "difficulty": "N/A",
+            "category": "System",
+            "skill": "N/A"
+        }]
 
 
 def get_ai_service() -> AIAnalysisInterface:

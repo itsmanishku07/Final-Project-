@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import api from '../services/api'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { IndianRupee } from 'lucide-react'
 
 /**
  * Job Posting Page
@@ -24,8 +26,10 @@ function JobPosting() {
     max_experience: 10,
     education_level: '',
     job_type: '',
+    compensation_type: 'CTC', // CTC or Stipend
     salary_min: '',
     salary_max: '',
+    stipend_amount: '',
     expires_at: ''
   })
   const [skillInput, setSkillInput] = useState('')
@@ -100,8 +104,9 @@ function JobPosting() {
     try {
       const submitData = {
         ...formData,
-        salary_min: formData.salary_min ? parseFloat(formData.salary_min) : 0,
-        salary_max: formData.salary_max ? parseFloat(formData.salary_max) : 0,
+        salary_min: formData.compensation_type === 'CTC' && formData.salary_min ? parseFloat(formData.salary_min) : 0,
+        salary_max: formData.compensation_type === 'CTC' && formData.salary_max ? parseFloat(formData.salary_max) : 0,
+        stipend_amount: formData.compensation_type === 'Stipend' && formData.stipend_amount ? parseFloat(formData.stipend_amount) : 0,
         expires_at: formData.expires_at || null
       }
 
@@ -120,8 +125,10 @@ function JobPosting() {
           max_experience: 10,
           education_level: '',
           job_type: '',
+          compensation_type: 'CTC',
           salary_min: '',
           salary_max: '',
+          stipend_amount: '',
           expires_at: ''
         })
         loadJobs()
@@ -144,8 +151,24 @@ function JobPosting() {
     })
   }
 
+  const formatSalary = (job) => {
+    if (job.stipend_amount && job.stipend_amount > 0) {
+      return `₹${job.stipend_amount.toLocaleString('en-IN')}/month (Stipend)`
+    }
+    if (job.salary_min > 0 && job.salary_max > 0) {
+      return `₹${job.salary_min.toLocaleString('en-IN')} - ₹${job.salary_max.toLocaleString('en-IN')} LPA`
+    }
+    if (job.salary_min > 0) {
+      return `₹${job.salary_min.toLocaleString('en-IN')}+ LPA`
+    }
+    if (job.salary_max > 0) {
+      return `Up to ₹${job.salary_max.toLocaleString('en-IN')} LPA`
+    }
+    return null
+  }
+
   if (loadingJobs) {
-    return <LoadingSpinner />
+    return <div className="flex justify-center items-center min-h-[400px]"><AILoadingAnimation message="Loading Jobs" context="jobs" size="medium" /></div>
   }
 
   return (
@@ -180,7 +203,6 @@ function JobPosting() {
                   value={formData.title}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g. Senior Software Engineer"
                   required
                 />
               </div>
@@ -195,7 +217,6 @@ function JobPosting() {
                   value={formData.company}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Company name"
                   required
                 />
               </div>
@@ -211,7 +232,6 @@ function JobPosting() {
                 onChange={handleInputChange}
                 rows={6}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Detailed job description, responsibilities, and requirements..."
                 required
               />
             </div>
@@ -227,7 +247,6 @@ function JobPosting() {
                   value={formData.location}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g. New York, NY or Remote"
                 />
               </div>
 
@@ -246,6 +265,7 @@ function JobPosting() {
                   <option value="Part-time">Part-time</option>
                   <option value="Contract">Contract</option>
                   <option value="Internship">Internship</option>
+                  <option value="Freelance">Freelance</option>
                 </select>
               </div>
             </div>
@@ -261,7 +281,6 @@ function JobPosting() {
                   value={skillInput}
                   onChange={(e) => setSkillInput(e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter a skill and press Add"
                   onKeyPress={(e) => e.key === 'Enter' && handleAddSkill(e)}
                 />
                 <button
@@ -334,7 +353,7 @@ function JobPosting() {
                 >
                   <option value="">Any</option>
                   <option value="High School">High School</option>
-                  <option value="Associate Degree">Associate Degree</option>
+                  <option value="Diploma">Diploma</option>
                   <option value="Bachelor's Degree">Bachelor's Degree</option>
                   <option value="Master's Degree">Master's Degree</option>
                   <option value="PhD">PhD</option>
@@ -342,41 +361,104 @@ function JobPosting() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Salary Range (Min)
+            {/* Compensation Section */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Compensation Type
+              </label>
+              <div className="flex gap-4 mb-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="compensation_type"
+                    value="CTC"
+                    checked={formData.compensation_type === 'CTC'}
+                    onChange={handleInputChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">CTC (Annual Package)</span>
                 </label>
-                <input
-                  type="number"
-                  name="salary_min"
-                  value={formData.salary_min}
-                  onChange={handleInputChange}
-                  min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Minimum salary"
-                />
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="compensation_type"
+                    value="Stipend"
+                    checked={formData.compensation_type === 'Stipend'}
+                    onChange={handleInputChange}
+                    className="mr-2 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Stipend (Monthly)</span>
+                </label>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Salary Range (Max)
-                </label>
-                <input
-                  type="number"
-                  name="salary_max"
-                  value={formData.salary_max}
-                  onChange={handleInputChange}
-                  min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Maximum salary"
-                />
-              </div>
+              {formData.compensation_type === 'CTC' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Minimum CTC (₹ LPA)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                        <IndianRupee className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="number"
+                        name="salary_min"
+                        value={formData.salary_min}
+                        onChange={handleInputChange}
+                        min="0"
+                        className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Enter amount in Lakhs Per Annum</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Maximum CTC (₹ LPA)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                        <IndianRupee className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="number"
+                        name="salary_max"
+                        value={formData.salary_max}
+                        onChange={handleInputChange}
+                        min="0"
+                        className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Enter amount in Lakhs Per Annum</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-md">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Monthly Stipend (₹)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      <IndianRupee className="w-4 h-4" />
+                    </span>
+                    <input
+                      type="number"
+                      name="stipend_amount"
+                      value={formData.stipend_amount}
+                      onChange={handleInputChange}
+                      min="0"
+                      className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Enter monthly stipend amount in Rupees</p>
+                </div>
+              )}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Expires At
+                Application Deadline
               </label>
               <input
                 type="datetime-local"
@@ -451,11 +533,12 @@ function JobPosting() {
                       )}
                     </div>
                     
-                    <div className="mt-3 text-sm text-gray-500">
+                    <div className="mt-3 text-sm text-gray-500 flex flex-wrap gap-4">
                       <span>Experience: {job.min_experience}-{job.max_experience} years</span>
-                      {job.salary_min > 0 && job.salary_max > 0 && (
-                        <span className="ml-4">
-                          Salary: ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}
+                      {formatSalary(job) && (
+                        <span className="flex items-center text-green-700 font-medium">
+                          <IndianRupee className="w-3 h-3 mr-1" />
+                          {formatSalary(job)}
                         </span>
                       )}
                     </div>

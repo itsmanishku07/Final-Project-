@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import api from '../services/api'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 /**
@@ -159,11 +160,20 @@ function JobSearch() {
     })
   }
 
-  const formatSalary = (min, max) => {
-    if (!min && !max) return 'Not specified'
-    if (min && max) return `$${min.toLocaleString()} - $${max.toLocaleString()}`
-    if (min) return `From $${min.toLocaleString()}`
-    return `Up to $${max.toLocaleString()}`
+  const formatSalary = (job) => {
+    if (job.stipend_amount && job.stipend_amount > 0) {
+      return `₹${job.stipend_amount.toLocaleString('en-IN')}/month`
+    }
+    if (job.salary_min > 0 && job.salary_max > 0) {
+      return `₹${job.salary_min.toLocaleString('en-IN')} - ₹${job.salary_max.toLocaleString('en-IN')} LPA`
+    }
+    if (job.salary_min > 0) {
+      return `₹${job.salary_min.toLocaleString('en-IN')}+ LPA`
+    }
+    if (job.salary_max > 0) {
+      return `Up to ₹${job.salary_max.toLocaleString('en-IN')} LPA`
+    }
+    return null
   }
 
   return (
@@ -214,7 +224,7 @@ function JobSearch() {
         <div className="lg:col-span-2">
           {loading ? (
             <div className="flex justify-center py-12">
-              <LoadingSpinner size="large" />
+              <AILoadingAnimation message="Finding Jobs" context="search" size="medium" showFacts={false} />
             </div>
           ) : jobs.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-8 text-center">

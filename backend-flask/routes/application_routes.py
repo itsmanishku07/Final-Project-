@@ -12,6 +12,7 @@ from repositories.resume_repository import ResumeRepository
 from repositories.user_repository import UserRepository
 from models.application import Application, ApplicationStatus
 from services.ai_service import get_ai_service
+from services.email_service import get_email_service
 from utils.auth_utils import get_current_user
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,7 @@ job_repository = JobRepository()
 resume_repository = ResumeRepository()
 user_repository = UserRepository()
 ai_service = get_ai_service()
+email_service = get_email_service()
 
 def require_auth(f):
     """Decorator to require authentication"""
@@ -64,34 +66,44 @@ def apply_to_job(current_user):
     """Apply to a job with resume"""
     try:
         data = request.get_json()
+        logger.info(f"Apply request data: {data}")
         
         if not data:
+            logger.error("No request body provided")
             return jsonify({'success': False, 'message': 'Request body required'}), 400
         
         job_id = data.get('job_id')
         resume_id = data.get('resume_id')
         cover_letter = data.get('cover_letter', '')
         
+        logger.info(f"Applying to job_id={job_id} with resume_id={resume_id}")
+        
         if not job_id or not resume_id:
+            logger.error(f"Missing required fields: job_id={job_id}, resume_id={resume_id}")
             return jsonify({'success': False, 'message': 'job_id and resume_id are required'}), 400
         
         # Check if job exists and is active
         job = job_repository.find_by_id(job_id)
         if not job:
+            logger.error(f"Job not found: {job_id}")
             return jsonify({'success': False, 'message': 'Job not found'}), 404
         if not job.active:
+            logger.error(f"Job is not active: {job_id}")
             return jsonify({'success': False, 'message': 'Job is no longer accepting applications'}), 400
         
         # Check if resume exists and belongs to user
         resume = resume_repository.find_by_id(resume_id)
         if not resume:
+            logger.error(f"Resume not found: {resume_id}")
             return jsonify({'success': False, 'message': 'Resume not found'}), 404
         if resume.user_id != current_user['uid']:
+            logger.error(f"Resume {resume_id} does not belong to user {current_user['uid']}")
             return jsonify({'success': False, 'message': 'Resume does not belong to you'}), 403
         
         # Check if already applied
         existing = application_repository.find_by_job_and_candidate(job_id, current_user['uid'])
         if existing:
+            logger.error(f"User {current_user['uid']} already applied to job {job_id}")
             return jsonify({'success': False, 'message': 'You have already applied to this job'}), 400
         
         # Create application
@@ -268,7 +280,7 @@ def get_job_applications(current_user, job_id):
 @require_auth
 @require_role(['RECRUITER', 'ADMIN'])
 def update_application_status(current_user, application_id):
-    """Update application status (recruiter action)"""
+    """Update application status (recruiter action) and send email notification"""
     try:
         data = request.get_json()
         
@@ -293,13 +305,68 @@ def update_application_status(current_user, application_id):
             return jsonify({'success': False, 'message': 'Not authorized'}), 403
         
         notes = data.get('notes', '')
-        application.update_status(new_status, notes)
+        custom_email_message = data.get('email_message', '')
+        send_email = data.get('send_email', True)  # Default to sending email
         
+        application.update_status(new_status, notes)
         updated = application_repository.update_application(application)
+        
+        # Send email notification for status changes
+        email_sent = False
+        if send_email and new_status in [ApplicationStatus.SHORTLISTED, ApplicationStatus.REJECTED, ApplicationStatus.HIRED]:
+            # Get candidate and recruiter info
+            candidate = user_repository.find_by_uid(application.candidate_id)
+            recruiter = user_repository.find_by_uid(current_user['uid'])
+            
+            if candidate and candidate.email:
+                candidate_name = candidate.name or 'Candidate'
+                recruiter_name = recruiter.name if recruiter else None
+                recruiter_email = recruiter.email if recruiter else None
+                job_title = job.title if job else 'Position'
+                company = job.company if job else 'Company'
+                
+                try:
+                    if new_status == ApplicationStatus.SHORTLISTED:
+                        email_sent = email_service.send_shortlisted_email(
+                            candidate_email=candidate.email,
+                            candidate_name=candidate_name,
+                            job_title=job_title,
+                            company=company,
+                            custom_message=custom_email_message if custom_email_message else None,
+                            recruiter_name=recruiter_name,
+                            recruiter_email=recruiter_email
+                        )
+                    elif new_status == ApplicationStatus.REJECTED:
+                        email_sent = email_service.send_rejection_email(
+                            candidate_email=candidate.email,
+                            candidate_name=candidate_name,
+                            job_title=job_title,
+                            company=company,
+                            custom_message=custom_email_message if custom_email_message else None,
+                            recruiter_name=recruiter_name
+                        )
+                    elif new_status == ApplicationStatus.HIRED:
+                        email_sent = email_service.send_hired_email(
+                            candidate_email=candidate.email,
+                            candidate_name=candidate_name,
+                            job_title=job_title,
+                            company=company,
+                            custom_message=custom_email_message if custom_email_message else None,
+                            recruiter_name=recruiter_name,
+                            recruiter_email=recruiter_email
+                        )
+                    
+                    if email_sent:
+                        logger.info(f"Email sent to {candidate.email} for status {new_status}")
+                    else:
+                        logger.warning(f"Email not sent to {candidate.email} - service may not be configured")
+                except Exception as email_error:
+                    logger.error(f"Failed to send email notification: {email_error}")
         
         return jsonify({
             'success': True,
             'message': 'Application status updated',
+            'email_sent': email_sent,
             'application': {
                 'id': updated.id,
                 'status': updated.status,

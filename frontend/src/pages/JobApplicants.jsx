@@ -3,11 +3,12 @@ import { useParams, Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import api from '../services/api'
 import LoadingSpinner from '../components/LoadingSpinner'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 import { 
   Mail, Phone, Linkedin, Github, Globe, MapPin, User, Briefcase, 
   GraduationCap, X, FileText, Calendar, Code, ExternalLink,
   CheckCircle, XCircle, Building, ChevronDown, MessageSquare, HelpCircle,
-  Lightbulb, Target, AlertCircle, RefreshCw
+  Lightbulb, Target, AlertCircle, RefreshCw, Send, Edit3
 } from 'lucide-react'
 
 function JobApplicants() {
@@ -21,6 +22,9 @@ function JobApplicants() {
   const [loadingQuestions, setLoadingQuestions] = useState(false)
   const [refreshingQuestions, setRefreshingQuestions] = useState(false)
   const [selectedAppForQuestions, setSelectedAppForQuestions] = useState(null)
+  
+  // Email modal state
+  const [emailModal, setEmailModal] = useState(null) // { applicationId, status, candidateName, candidateEmail }
 
   useEffect(() => {
     loadApplications()
@@ -41,18 +45,40 @@ function JobApplicants() {
     }
   }
 
-  const updateStatus = async (applicationId, newStatus) => {
+  const updateStatus = async (applicationId, newStatus, emailMessage = '', sendEmail = true) => {
     setUpdating(true)
     try {
-      const response = await api.put(`/applications/${applicationId}/status`, { status: newStatus })
+      const response = await api.put(`/applications/${applicationId}/status`, { 
+        status: newStatus,
+        email_message: emailMessage,
+        send_email: sendEmail
+      })
       if (response.data.success) {
-        toast.success('Status updated successfully')
+        const emailInfo = response.data.email_sent ? ' Email notification sent!' : ''
+        toast.success(`Status updated successfully.${emailInfo}`)
         loadApplications()
       }
     } catch (error) {
       toast.error('Failed to update status')
     } finally {
       setUpdating(false)
+      setEmailModal(null)
+    }
+  }
+
+  // Open email customization modal before status change
+  const openEmailModal = (applicationId, status, candidateName, candidateEmail) => {
+    setEmailModal({ applicationId, status, candidateName, candidateEmail })
+  }
+
+  // Handle status change with optional email
+  const handleStatusChange = (applicationId, status, candidateName, candidateEmail) => {
+    // For SHORTLISTED, REJECTED, HIRED - show email modal
+    if (['SHORTLISTED', 'REJECTED', 'HIRED'].includes(status)) {
+      openEmailModal(applicationId, status, candidateName, candidateEmail)
+    } else {
+      // For other statuses, update directly
+      updateStatus(applicationId, status, '', false)
     }
   }
 
@@ -550,7 +576,7 @@ function JobApplicants() {
     
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col relative">
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-t-2xl flex-shrink-0">
             <div className="flex justify-between items-start">
@@ -596,6 +622,13 @@ function JobApplicants() {
               </div>
             </div>
           </div>
+          
+          {/* Refreshing Overlay */}
+          {isRefreshing && (
+            <div className="absolute inset-0 bg-white/90 flex items-center justify-center z-10 rounded-2xl">
+              <AILoadingAnimation message="Generating new questions..." />
+            </div>
+          )}
           
           {/* Questions List */}
           <div className="p-6 overflow-y-auto flex-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -690,7 +723,143 @@ function JobApplicants() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingSpinner size="large" />
+        <AILoadingAnimation message="Loading Applicants" context="applications" size="medium" />
+      </div>
+    )
+  }
+
+  // Email Customization Modal
+  const EmailModal = ({ data, onClose, onSend, isUpdating }) => {
+    const [emailMessage, setEmailMessage] = useState('')
+    const [sendEmail, setSendEmail] = useState(true)
+    
+    if (!data) return null
+    
+    const getStatusInfo = () => {
+      switch (data.status) {
+        case 'SHORTLISTED':
+          return {
+            title: 'Shortlist Candidate',
+            color: 'from-green-500 to-emerald-600',
+            icon: '🎉',
+            description: 'Great news! This candidate will be notified that they have been shortlisted.',
+            defaultMessage: `We are pleased to inform you that after careful review of your application, you have been shortlisted for the ${job?.title || 'position'} at ${job?.company || 'our company'}.\n\nOur team was impressed with your qualifications and experience, and we would like to move forward with the next steps in our hiring process.\n\nWe will be in touch shortly with more details about the interview process.`
+          }
+        case 'REJECTED':
+          return {
+            title: 'Reject Application',
+            color: 'from-red-500 to-rose-600',
+            icon: '📋',
+            description: 'The candidate will be notified professionally about this decision.',
+            defaultMessage: `Thank you for taking the time to apply for the ${job?.title || 'position'} at ${job?.company || 'our company'} and for your interest in joining our team.\n\nAfter careful consideration, we have decided to move forward with other candidates whose qualifications more closely match our current needs.\n\nWe encourage you to apply for future positions that match your skills and experience. We wish you the best in your job search and future career endeavors.`
+          }
+        case 'HIRED':
+          return {
+            title: 'Mark as Hired',
+            color: 'from-purple-500 to-violet-600',
+            icon: '🎊',
+            description: 'Congratulations! The candidate will receive an exciting offer notification.',
+            defaultMessage: `We are thrilled to inform you that you have been selected for the ${job?.title || 'position'} at ${job?.company || 'our company'}!\n\nAfter a thorough evaluation process, we are confident that your skills, experience, and enthusiasm make you the ideal candidate for this role.\n\nWe will be sending you the official offer letter and onboarding details shortly. Please feel free to reach out if you have any questions.\n\nWelcome to the team!`
+          }
+        default:
+          return { title: 'Update Status', color: 'from-gray-500 to-gray-600', icon: '📝', description: '', defaultMessage: '' }
+      }
+    }
+    
+    const statusInfo = getStatusInfo()
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+          {/* Header */}
+          <div className={`bg-gradient-to-r ${statusInfo.color} text-white p-6 rounded-t-2xl`}>
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <span className="text-4xl">{statusInfo.icon}</span>
+                <div>
+                  <h2 className="text-2xl font-bold">{statusInfo.title}</h2>
+                  <p className="text-white/80 text-sm mt-1">{data.candidateName} ({data.candidateEmail})</p>
+                </div>
+              </div>
+              <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-full">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Body */}
+          <div className="p-6 overflow-y-auto flex-1">
+            <p className="text-gray-600 mb-4">{statusInfo.description}</p>
+            
+            {/* Send Email Toggle */}
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4">
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-blue-600" />
+                <div>
+                  <div className="font-medium text-gray-900">Send Email Notification</div>
+                  <div className="text-sm text-gray-500">Notify the candidate about this status change</div>
+                </div>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={sendEmail} 
+                  onChange={(e) => setSendEmail(e.target.checked)}
+                  className="sr-only peer" 
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+            
+            {/* Custom Message */}
+            {sendEmail && (
+              <div>
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                  <Edit3 className="w-4 h-4" />
+                  Customize Email Message (Optional)
+                </label>
+                <textarea
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  placeholder={statusInfo.defaultMessage}
+                  rows={8}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Leave empty to use the default message shown above. Your custom message will replace the main content of the email.
+                </p>
+              </div>
+            )}
+          </div>
+          
+          {/* Footer */}
+          <div className="p-4 border-t bg-gray-50 rounded-b-2xl flex justify-end gap-3">
+            <button 
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={() => onSend(data.applicationId, data.status, emailMessage, sendEmail)}
+              disabled={isUpdating}
+              className={`px-6 py-2 text-white rounded-lg flex items-center gap-2 disabled:opacity-50 ${
+                data.status === 'SHORTLISTED' ? 'bg-green-600 hover:bg-green-700' :
+                data.status === 'REJECTED' ? 'bg-red-600 hover:bg-red-700' :
+                'bg-purple-600 hover:bg-purple-700'
+              }`}
+            >
+              {isUpdating ? (
+                <LoadingSpinner size="small" />
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  {sendEmail ? 'Update & Send Email' : 'Update Status'}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     )
   }
@@ -807,20 +976,28 @@ function JobApplicants() {
                       
                       {app.status === 'PENDING' && (
                         <>
-                          <button onClick={() => updateStatus(app.id, 'REVIEWED')} disabled={updating}
+                          <button onClick={() => updateStatus(app.id, 'REVIEWED', '', false)} disabled={updating}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm disabled:opacity-50">Mark Reviewed</button>
-                          <button onClick={() => updateStatus(app.id, 'SHORTLISTED')} disabled={updating}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50">Shortlist</button>
-                          <button onClick={() => updateStatus(app.id, 'REJECTED')} disabled={updating}
-                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm disabled:opacity-50">Reject</button>
+                          <button onClick={() => handleStatusChange(app.id, 'SHORTLISTED', app.candidate_name, app.candidate_email)} disabled={updating}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50 flex items-center justify-center">
+                            <Mail className="w-3 h-3 mr-1" /> Shortlist
+                          </button>
+                          <button onClick={() => handleStatusChange(app.id, 'REJECTED', app.candidate_name, app.candidate_email)} disabled={updating}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm disabled:opacity-50 flex items-center justify-center">
+                            <Mail className="w-3 h-3 mr-1" /> Reject
+                          </button>
                         </>
                       )}
                       {app.status === 'REVIEWED' && (
                         <>
-                          <button onClick={() => updateStatus(app.id, 'SHORTLISTED')} disabled={updating}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50">Shortlist</button>
-                          <button onClick={() => updateStatus(app.id, 'REJECTED')} disabled={updating}
-                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm disabled:opacity-50">Reject</button>
+                          <button onClick={() => handleStatusChange(app.id, 'SHORTLISTED', app.candidate_name, app.candidate_email)} disabled={updating}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50 flex items-center justify-center">
+                            <Mail className="w-3 h-3 mr-1" /> Shortlist
+                          </button>
+                          <button onClick={() => handleStatusChange(app.id, 'REJECTED', app.candidate_name, app.candidate_email)} disabled={updating}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm disabled:opacity-50 flex items-center justify-center">
+                            <Mail className="w-3 h-3 mr-1" /> Reject
+                          </button>
                         </>
                       )}
                       {app.status === 'SHORTLISTED' && (
@@ -833,10 +1010,14 @@ function JobApplicants() {
                               <><Lightbulb className="w-4 h-4 mr-1" /> Interview Questions</>
                             )}
                           </button>
-                          <button onClick={() => updateStatus(app.id, 'HIRED')} disabled={updating}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50">Mark as Hired</button>
-                          <button onClick={() => updateStatus(app.id, 'REJECTED')} disabled={updating}
-                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm disabled:opacity-50">Reject</button>
+                          <button onClick={() => handleStatusChange(app.id, 'HIRED', app.candidate_name, app.candidate_email)} disabled={updating}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm disabled:opacity-50 flex items-center justify-center">
+                            <Mail className="w-3 h-3 mr-1" /> Mark as Hired
+                          </button>
+                          <button onClick={() => handleStatusChange(app.id, 'REJECTED', app.candidate_name, app.candidate_email)} disabled={updating}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm disabled:opacity-50 flex items-center justify-center">
+                            <Mail className="w-3 h-3 mr-1" /> Reject
+                          </button>
                         </>
                       )}
                       {app.status === 'HIRED' && (
@@ -862,12 +1043,36 @@ function JobApplicants() {
         <CandidateProfileModal app={selectedCandidate} onClose={() => setSelectedCandidate(null)} />
       )}
       
+      {/* AI Loading Modal */}
+      {loadingQuestions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-4">
+              <h2 className="text-xl font-bold flex items-center justify-center">
+                <Lightbulb className="w-6 h-6 mr-2 animate-pulse" />
+                AI Interview Assistant
+              </h2>
+            </div>
+            <AILoadingAnimation message="Generating personalized interview questions..." />
+          </div>
+        </div>
+      )}
+      
       {interviewQuestions && (
         <InterviewQuestionsModal 
           data={interviewQuestions} 
           onClose={closeInterviewQuestions} 
           onRefresh={refreshInterviewQuestions}
           isRefreshing={refreshingQuestions}
+        />
+      )}
+      
+      {emailModal && (
+        <EmailModal 
+          data={emailModal}
+          onClose={() => setEmailModal(null)}
+          onSend={updateStatus}
+          isUpdating={updating}
         />
       )}
     </div>

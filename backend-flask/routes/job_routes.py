@@ -93,6 +93,10 @@ def create_job(current_user):
             job.salary_min = data['salary_min']
         if 'salary_max' in data:
             job.salary_max = data['salary_max']
+        if 'stipend_amount' in data:
+            job.stipend_amount = data['stipend_amount']
+        if 'compensation_type' in data:
+            job.compensation_type = data['compensation_type']
         if 'expires_at' in data:
             job.expires_at = datetime.fromisoformat(data['expires_at'])
         
@@ -157,6 +161,8 @@ def get_all_active_jobs():
                 'job_type': job.job_type or '',
                 'salary_min': job.salary_min,
                 'salary_max': job.salary_max,
+                'stipend_amount': getattr(job, 'stipend_amount', 0),
+                'compensation_type': getattr(job, 'compensation_type', 'CTC'),
                 'created_at': job.created_at.isoformat(),
                 'expires_at': job.expires_at.isoformat() if job.expires_at else ''
             }
@@ -227,6 +233,8 @@ def get_job(job_id):
             'job_type': job.job_type or '',
             'salary_min': job.salary_min,
             'salary_max': job.salary_max,
+            'stipend_amount': getattr(job, 'stipend_amount', 0),
+            'compensation_type': getattr(job, 'compensation_type', 'CTC'),
             'created_at': job.created_at.isoformat(),
             'updated_at': job.updated_at.isoformat(),
             'expires_at': job.expires_at.isoformat() if job.expires_at else '',
@@ -267,6 +275,8 @@ def get_my_jobs(current_user):
                 'job_type': job.job_type or '',
                 'salary_min': job.salary_min,
                 'salary_max': job.salary_max,
+                'stipend_amount': getattr(job, 'stipend_amount', 0),
+                'compensation_type': getattr(job, 'compensation_type', 'CTC'),
                 'created_at': job.created_at.isoformat(),
                 'updated_at': job.updated_at.isoformat(),
                 'expires_at': job.expires_at.isoformat() if job.expires_at else '',
@@ -327,6 +337,10 @@ def update_job(current_user, job_id):
             job.salary_min = data['salary_min']
         if 'salary_max' in data:
             job.salary_max = data['salary_max']
+        if 'stipend_amount' in data:
+            job.stipend_amount = data['stipend_amount']
+        if 'compensation_type' in data:
+            job.compensation_type = data['compensation_type']
         if 'active' in data:
             job.active = data['active']
         if 'expires_at' in data and data['expires_at']:

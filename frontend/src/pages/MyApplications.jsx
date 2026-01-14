@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import api from '../services/api'
-import LoadingSpinner from '../components/LoadingSpinner'
+import AILoadingAnimation from '../components/AILoadingAnimation'
 
 /**
  * My Applications Page
@@ -74,7 +74,7 @@ function MyApplications() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingSpinner size="large" />
+        <AILoadingAnimation message="Loading Applications" context="applications" size="medium" />
       </div>
     )
   }
