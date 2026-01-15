@@ -391,12 +391,6 @@ function VideoCall() {
   }
 
   const toggleScreenShare = async () => {
-    // Only candidates can share screen
-    if (!isCandidate) {
-      toast.error('Only candidates can share their screen')
-      return
-    }
-
     if (isScreenSharing) {
       // Stop screen sharing
       if (screenStreamRef.current) {
@@ -786,18 +780,16 @@ function VideoCall() {
             {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
           </button>
           
-          <button 
-            onClick={toggleScreenShare} 
-            className={`p-4 rounded-full transition-all ${
-              isCandidate 
-                ? (isScreenSharing ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-600')
-                : 'bg-gray-600 cursor-not-allowed opacity-50'
-            } text-white`}
-            title={isCandidate ? (isScreenSharing ? 'Stop sharing' : 'Share screen') : 'Only candidates can share screen'}
-            disabled={!isCandidate}
-          >
-            {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
-          </button>
+          {/* Screen Share - Candidate Only */}
+          {isCandidate && (
+            <button 
+              onClick={toggleScreenShare} 
+              className={`p-4 rounded-full transition-all ${isScreenSharing ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}
+              title={isScreenSharing ? 'Stop sharing' : 'Share screen'}
+            >
+              {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
+            </button>
+          )}
           
           <button 
             onClick={() => setShowChat(!showChat)} 
