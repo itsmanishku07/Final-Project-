@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/FirebaseAuthContext'
 import AILoadingAnimation from '../components/AILoadingAnimation'
 import ProctorMonitor from '../components/ProctorMonitor'
 import ProctorAlert from '../components/ProctorAlert'
+import InterviewLockdown from '../components/InterviewLockdown'
 import { db } from '../config/firebase'
 import { 
   Video, VideoOff, Mic, MicOff, PhoneOff, 
@@ -390,7 +391,14 @@ function VideoCall() {
   }
 
   const toggleScreenShare = async () => {
+    // Only candidates can share screen
+    if (!isCandidate) {
+      toast.error('Only candidates can share their screen')
+      return
+    }
+
     if (isScreenSharing) {
+      // Stop screen sharing
       if (screenStreamRef.current) {
         screenStreamRef.current.getTracks().forEach(track => track.stop())
       }
@@ -403,9 +411,26 @@ function VideoCall() {
         localVideoRef.current.srcObject = localStreamRef.current
       }
       setIsScreenSharing(false)
+      toast.success('Screen sharing stopped')
+      
+      // Notify recruiter
+      try {
+        if (roomIdRef.current) {
+          await updateDoc(doc(db, 'rooms', roomIdRef.current), {
+            screenSharing: false,
+            screenShareBy: null,
+            screenShareEndedAt: Date.now()
+          })
+        }
+      } catch (e) {
+        console.error('Failed to update screen share status:', e)
+      }
     } else {
       try {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true })
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+          video: true,
+          audio: true // Include system audio if available
+        })
         screenStreamRef.current = screenStream
         const screenTrack = screenStream.getVideoTracks()[0]
         
@@ -418,10 +443,29 @@ function VideoCall() {
           localVideoRef.current.srcObject = screenStream
         }
         
-        screenTrack.onended = () => toggleScreenShare()
+        // Handle when user stops sharing via browser UI
+        screenTrack.onended = () => {
+          toggleScreenShare()
+        }
+        
         setIsScreenSharing(true)
+        toast.success('Screen sharing started')
+        
+        // Notify recruiter
+        try {
+          if (roomIdRef.current) {
+            await updateDoc(doc(db, 'rooms', roomIdRef.current), {
+              screenSharing: true,
+              screenShareBy: user?.uid,
+              screenShareStartedAt: Date.now()
+            })
+          }
+        } catch (e) {
+          console.error('Failed to update screen share status:', e)
+        }
       } catch (e) {
         console.error('Screen share error:', e)
+        toast.error('Failed to start screen sharing')
       }
     }
   }
@@ -744,8 +788,13 @@ function VideoCall() {
           
           <button 
             onClick={toggleScreenShare} 
-            className={`p-4 rounded-full transition-all ${isScreenSharing ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}
-            title={isScreenSharing ? 'Stop sharing' : 'Share screen'}
+            className={`p-4 rounded-full transition-all ${
+              isCandidate 
+                ? (isScreenSharing ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-600')
+                : 'bg-gray-600 cursor-not-allowed opacity-50'
+            } text-white`}
+            title={isCandidate ? (isScreenSharing ? 'Stop sharing' : 'Share screen') : 'Only candidates can share screen'}
+            disabled={!isCandidate}
           >
             {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
           </button>
@@ -791,6 +840,14 @@ function VideoCall() {
           </button>
         </div>
       </div>
+
+      {/* Interview Lockdown for Candidates */}
+      {isCandidate && (
+        <InterviewLockdown 
+          isActive={joined}
+          onViolation={handleProctorViolation}
+        />
+      )}
 
       {/* Proctor Monitor for Candidates (Hidden UI, Background Monitoring) */}
       <ProctorMonitor 

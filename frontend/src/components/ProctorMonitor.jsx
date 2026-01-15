@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../config/firebase'
-import { AlertTriangle, Eye, EyeOff, Monitor, Smartphone } from 'lucide-react'
+import { AlertTriangle, Eye, EyeOff, Monitor } from 'lucide-react'
 
 /**
  * ProctorMonitor - Comprehensive proctoring system for video interviews
@@ -78,6 +78,23 @@ function ProctorMonitor({
         duration: 5000,
         icon: '👁️'
       })
+      
+      // Force fullscreen for candidates after 3 seconds
+      setTimeout(() => {
+        if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+          document.documentElement.requestFullscreen().then(() => {
+            toast.success('Interview is now in fullscreen mode', {
+              duration: 3000,
+              icon: '🔒'
+            })
+          }).catch(() => {
+            toast.error('Please enable fullscreen mode for the interview', {
+              duration: 8000,
+              icon: '⚠️'
+            })
+          })
+        }
+      }, 3000)
     }
   }
 
@@ -105,8 +122,23 @@ function ProctorMonitor({
     const isVisible = !document.hidden
     setTabVisible(isVisible)
     
-    if (!isVisible && isCandidate) {
-      recordViolation('TAB_SWITCH', 'Candidate switched to another tab/window', 'high')
+    if (!isVisible && isCandidate && monitoringRef.current) {
+      // Immediately try to refocus the window
+      window.focus()
+      
+      // Record violation
+      recordViolation('TAB_SWITCH', 'Candidate attempted to switch tabs/windows - BLOCKED', 'high')
+      
+      // Show strong warning
+      toast.error('⚠️ TAB SWITCHING DETECTED! Stay focused on the interview.', {
+        duration: 8000,
+        style: {
+          background: '#dc2626',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold'
+        }
+      })
     }
   }
 
@@ -120,6 +152,13 @@ function ProctorMonitor({
     
     if (!isFS && isCandidate && monitoringRef.current) {
       recordViolation('FULLSCREEN_EXIT', 'Candidate exited fullscreen mode', 'medium')
+      
+      // Try to re-enter fullscreen
+      setTimeout(() => {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {})
+        }
+      }, 1000)
     }
   }
 
@@ -129,7 +168,26 @@ function ProctorMonitor({
 
   const handleWindowBlur = () => {
     if (isCandidate && monitoringRef.current) {
-      recordViolation('WINDOW_BLUR', 'Candidate switched away from interview window', 'high')
+      // Immediately try to refocus
+      setTimeout(() => {
+        window.focus()
+        if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {})
+        }
+      }, 100)
+      
+      recordViolation('WINDOW_BLUR', 'Candidate switched away from interview window - BLOCKED', 'high')
+      
+      // Show critical warning
+      toast.error('🚨 WINDOW SWITCHING BLOCKED! Return to interview immediately.', {
+        duration: 10000,
+        style: {
+          background: '#dc2626',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold'
+        }
+      })
     }
   }
 
@@ -138,23 +196,48 @@ function ProctorMonitor({
     
     const { key, altKey, ctrlKey, metaKey, shiftKey } = event
     
-    // Detect suspicious key combinations
-    const suspiciousKeys = [
-      { condition: altKey && key === 'Tab', type: 'ALT_TAB', message: 'Alt+Tab detected' },
-      { condition: ctrlKey && key === 'Tab', type: 'CTRL_TAB', message: 'Ctrl+Tab detected' },
-      { condition: ctrlKey && shiftKey && key === 'I', type: 'DEV_TOOLS', message: 'Developer tools shortcut' },
-      { condition: key === 'F12', type: 'DEV_TOOLS', message: 'F12 developer tools' },
-      { condition: ctrlKey && shiftKey && key === 'J', type: 'DEV_TOOLS', message: 'Console shortcut' },
-      { condition: ctrlKey && key === 'u', type: 'VIEW_SOURCE', message: 'View source shortcut' },
-      { condition: metaKey && key === 'Tab', type: 'CMD_TAB', message: 'Cmd+Tab detected (Mac)' },
-      { condition: altKey && key === 'F4', type: 'ALT_F4', message: 'Alt+F4 detected' }
+    // Block ALL suspicious key combinations for candidates
+    const blockedKeys = [
+      { condition: altKey && key === 'Tab', type: 'ALT_TAB', message: 'Alt+Tab blocked' },
+      { condition: ctrlKey && key === 'Tab', type: 'CTRL_TAB', message: 'Ctrl+Tab blocked' },
+      { condition: ctrlKey && shiftKey && key === 'I', type: 'DEV_TOOLS', message: 'Developer tools blocked' },
+      { condition: key === 'F12', type: 'DEV_TOOLS', message: 'F12 blocked' },
+      { condition: ctrlKey && shiftKey && key === 'J', type: 'DEV_TOOLS', message: 'Console blocked' },
+      { condition: ctrlKey && key === 'u', type: 'VIEW_SOURCE', message: 'View source blocked' },
+      { condition: ctrlKey && key === 'U', type: 'VIEW_SOURCE', message: 'View source blocked' },
+      { condition: metaKey && key === 'Tab', type: 'CMD_TAB', message: 'Cmd+Tab blocked (Mac)' },
+      { condition: altKey && key === 'F4', type: 'ALT_F4', message: 'Alt+F4 blocked' },
+      { condition: ctrlKey && key === 'w', type: 'CLOSE_TAB', message: 'Close tab blocked' },
+      { condition: ctrlKey && key === 'W', type: 'CLOSE_TAB', message: 'Close tab blocked' },
+      { condition: ctrlKey && key === 't', type: 'NEW_TAB', message: 'New tab blocked' },
+      { condition: ctrlKey && key === 'T', type: 'NEW_TAB', message: 'New tab blocked' },
+      { condition: ctrlKey && key === 'n', type: 'NEW_WINDOW', message: 'New window blocked' },
+      { condition: ctrlKey && key === 'N', type: 'NEW_WINDOW', message: 'New window blocked' },
+      { condition: ctrlKey && shiftKey && key === 'N', type: 'INCOGNITO', message: 'Incognito window blocked' },
+      { condition: key === 'F5', type: 'REFRESH', message: 'Page refresh blocked' },
+      { condition: ctrlKey && key === 'r', type: 'REFRESH', message: 'Page refresh blocked' },
+      { condition: ctrlKey && key === 'R', type: 'REFRESH', message: 'Page refresh blocked' }
     ]
     
-    for (const shortcut of suspiciousKeys) {
+    for (const shortcut of blockedKeys) {
       if (shortcut.condition) {
         event.preventDefault()
-        recordViolation(shortcut.type, shortcut.message, 'medium')
-        break
+        event.stopPropagation()
+        event.stopImmediatePropagation()
+        
+        recordViolation(shortcut.type, shortcut.message, 'high')
+        
+        // Show immediate feedback
+        toast.error(`🚫 ${shortcut.message.toUpperCase()}`, {
+          duration: 3000,
+          style: {
+            background: '#dc2626',
+            color: 'white',
+            fontWeight: 'bold'
+          }
+        })
+        
+        return false
       }
     }
   }
@@ -332,6 +415,19 @@ function ProctorMonitor({
           <span className={isFullscreen ? 'text-green-400' : 'text-orange-400'}>
             {isFullscreen ? 'Fullscreen' : 'Windowed'}
           </span>
+        </div>
+      </div>
+
+      {/* Screen Sharing Status */}
+      <div className="mb-4 p-3 bg-gray-700 rounded-lg">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-400">Screen Sharing</span>
+          <span className="text-blue-400 font-medium">
+            Candidate Only
+          </span>
+        </div>
+        <div className="text-xs text-gray-500 mt-1">
+          Only candidates can share their screen during interviews
         </div>
       </div>
 

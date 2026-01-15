@@ -67909,3 +67909,220 @@ google.auth.exceptions.RefreshError: ('invalid_grant: Invalid JWT Signature.', {
 2026-01-15 23:13:42,256 - app - INFO - Flask application initialized in production mode
 2026-01-15 23:13:42,277 - werkzeug - WARNING -  * Debugger is active!
 2026-01-15 23:13:42,283 - werkzeug - INFO -  * Debugger PIN: 418-087-069
+2026-01-15 23:21:06,472 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 23:21:06,473 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 23:21:06,473 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 23:21:06,473 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 23:21:06,474 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 23:21:06,541 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 23:21:06,548 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:06,548 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:06,710 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:06,710 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:06,710 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:21:06,712 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:06,714 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:21:06,714 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:06,714 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:06,714 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:06,714 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:21:06,715 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:06,715 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:06,715 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:06,715 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:21:06,730 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:21:06,730 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:06,731 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:06,731 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:06,731 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:21:06,734 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 23:21:06,734 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:21:06,734 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:06,734 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:06,758 - app - INFO - Flask application initialized in production mode
+2026-01-15 23:21:06,784 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.201.143.219:8080
+2026-01-15 23:21:06,785 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-15 23:21:06,787 - werkzeug - INFO -  * Restarting with stat
+2026-01-15 23:21:08,271 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 23:21:08,272 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 23:21:08,272 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 23:21:08,272 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 23:21:08,272 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 23:21:08,340 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 23:21:08,350 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:08,350 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:08,515 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:08,515 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:08,516 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:21:08,519 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:08,521 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:21:08,521 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:08,522 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:08,522 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:08,523 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:21:08,524 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:08,525 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:08,525 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:08,525 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:21:08,542 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:21:08,543 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:08,543 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:21:08,544 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:08,544 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:21:08,548 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 23:21:08,548 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:21:08,549 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:21:08,550 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:21:08,617 - app - INFO - Flask application initialized in production mode
+2026-01-15 23:21:08,633 - werkzeug - WARNING -  * Debugger is active!
+2026-01-15 23:21:08,636 - werkzeug - INFO -  * Debugger PIN: 418-087-069
+2026-01-15 23:21:19,035 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:19] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:21:23,000 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:23] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:21:23,034 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:23] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:21:23,347 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:23] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:21:23,349 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:23] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:21:23,351 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:23] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:21:23,353 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:23] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:21:25,617 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:25] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:21:27,726 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:27] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:21:28,847 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:28] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:21:31,638 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:31] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:21:35,660 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:35] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:21:39,201 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:21:39] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:26:45,499 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:45] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:26:47,632 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:26:47,746 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:26:47,748 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:26:47,750 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:26:47,753 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:26:47,756 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:26:47,758 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:26:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:28:10,067 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:28:10] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:30:17,012 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:30:17] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:30:19,683 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:30:19] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:30:43,332 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 23:30:43] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:39:38,139 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 23:39:38,139 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 23:39:38,140 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 23:39:38,140 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 23:39:38,140 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 23:39:38,203 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 23:39:38,216 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:38,216 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:38,383 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:38,383 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:38,383 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:39:38,386 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:38,391 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:39:38,391 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:38,392 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:38,393 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:38,393 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:39:38,396 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:38,397 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:38,399 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:38,400 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:39:38,420 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:39:38,420 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:38,420 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:38,421 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:38,421 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:39:38,426 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 23:39:38,426 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:39:38,427 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:38,427 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:38,449 - app - INFO - Flask application initialized in production mode
+2026-01-15 23:39:38,472 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.181.168.219:8080
+2026-01-15 23:39:38,473 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-15 23:39:38,477 - werkzeug - INFO -  * Restarting with stat
+2026-01-15 23:39:39,861 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 23:39:39,862 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 23:39:39,862 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 23:39:39,863 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 23:39:39,863 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 23:39:39,932 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 23:39:39,941 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:39,941 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:40,094 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:40,095 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:40,095 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:39:40,097 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:40,098 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:39:40,099 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:40,099 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:40,099 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:40,099 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:39:40,100 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:40,100 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:40,101 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:40,101 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:39:40,113 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:39:40,114 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:40,114 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:39:40,114 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:40,115 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:39:40,117 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 23:39:40,119 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:39:40,119 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:39:40,119 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:39:40,140 - app - INFO - Flask application initialized in production mode
+2026-01-15 23:39:40,148 - werkzeug - WARNING -  * Debugger is active!
+2026-01-15 23:39:40,154 - werkzeug - INFO -  * Debugger PIN: 418-087-069
+2026-01-15 23:41:06,152 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:06] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:10,378 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:10] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:10,411 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:10] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:10,718 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:10] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:10,751 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:10] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:41:10,754 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:10] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:41:12,907 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:12] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:41:14,939 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:14] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:16,098 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:16] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 23:41:18,860 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:18] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:22,733 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:22] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:26,177 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:26] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:26,275 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:26] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:26,875 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:26] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:26,973 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:26] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 23:41:26,978 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:26] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 23:41:26,980 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:26] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 23:41:26,987 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:26] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 23:41:26,999 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:41:28,392 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:28] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:28,395 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:28] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:30,371 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:30] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 23:41:30,427 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:41:30,695 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:30] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:30,698 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:30] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:32,729 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:32] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 23:41:34,315 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:34] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 23:41:39,377 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:39] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:41,978 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:41] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:42,781 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:42] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 23:41:45,037 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:45] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:46,767 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:46] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:47,199 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:47,200 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:47] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:47,202 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:47,211 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:47] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:48,809 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:48] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:49,382 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:49] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:51,006 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:51] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 23:41:51,086 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:51] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:51,088 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:51] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:51,834 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 23:41:51,836 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:51] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:52,629 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:52] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 23:41:52,648 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:52] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:54,733 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 23:41:54,735 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:54] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:56,339 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 23:41:56,342 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:56] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 23:41:58,128 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 23:41:58] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:41:58,262 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 23:41:58,269 - werkzeug - INFO - 10.181.168.84 - - [15/Jan/2026 23:41:58] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
