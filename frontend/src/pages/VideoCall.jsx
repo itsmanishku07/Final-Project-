@@ -4,12 +4,14 @@ import { toast } from 'react-hot-toast'
 import api from '../services/api'
 import { useAuth } from '../contexts/FirebaseAuthContext'
 import AILoadingAnimation from '../components/AILoadingAnimation'
+import ProctorMonitor from '../components/ProctorMonitor'
+import ProctorAlert from '../components/ProctorAlert'
 import { db } from '../config/firebase'
 import { 
   Video, VideoOff, Mic, MicOff, PhoneOff, 
   Monitor, MonitorOff, MessageSquare, Users,
   Maximize, Minimize, Clock, Calendar, Briefcase, 
-  ArrowLeft, Send, X
+  ArrowLeft, Send, X, Shield, AlertTriangle
 } from 'lucide-react'
 import { 
   doc, setDoc, onSnapshot, deleteDoc, getDoc, 
@@ -36,6 +38,10 @@ function VideoCall() {
   const [callStartTime, setCallStartTime] = useState(null)
   const [status, setStatus] = useState('Ready to join')
   const [connectionLogs, setConnectionLogs] = useState([])
+  const [proctorViolations, setProctorViolations] = useState([])
+  const [showProctorPanel, setShowProctorPanel] = useState(false)
+  const [isCandidate, setIsCandidate] = useState(false)
+  const [activeAlert, setActiveAlert] = useState(null)
   
   const localVideoRef = useRef(null)
   const remoteVideoRef = useRef(null)
@@ -77,6 +83,8 @@ function VideoCall() {
       const res = await api.get(`/interviews/${interviewId}/join`)
       if (res.data.success) {
         setMeetingInfo(res.data.meeting)
+        // Determine if current user is candidate or recruiter
+        setIsCandidate(res.data.meeting.candidate_id === user?.uid)
         addLog('Meeting info loaded')
       }
     } catch (err) {
@@ -170,6 +178,17 @@ function VideoCall() {
       const roomRef = doc(db, 'rooms', roomIdRef.current)
       const callerCandidatesCollection = collection(roomRef, 'callerCandidates')
       const calleeCandidatesCollection = collection(roomRef, 'calleeCandidates')
+
+      // Listen for proctor violations if recruiter
+      if (!isCandidate) {
+        const unsubProctor = onSnapshot(roomRef, (snapshot) => {
+          const data = snapshot.data()
+          if (data?.proctorViolations) {
+            setProctorViolations(data.proctorViolations)
+          }
+        })
+        unsubscribersRef.current.push(unsubProctor)
+      }
 
       // Check if room exists
       const roomSnapshot = await getDoc(roomRef)
@@ -427,6 +446,21 @@ function VideoCall() {
     setChatInput('')
   }
 
+  const handleProctorViolation = (violation) => {
+    // Show notification to recruiter
+    if (!isCandidate) {
+      // Show alert popup for medium/high severity
+      if (violation.severity !== 'low') {
+        setActiveAlert(violation)
+      }
+      
+      // Auto-show proctor panel on high severity violations
+      if (violation.severity === 'high') {
+        setShowProctorPanel(true)
+      }
+    }
+  }
+
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
@@ -529,6 +563,22 @@ function VideoCall() {
               <li>3. Both need to allow camera/microphone</li>
             </ul>
           </div>
+
+          {/* Proctoring Notice for Candidates */}
+          {isCandidate && (
+            <div className="mt-4 p-4 bg-orange-900/30 rounded-xl border border-orange-800">
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="w-5 h-5 text-orange-400" />
+                <h3 className="text-orange-400 font-medium">Proctoring Active</h3>
+              </div>
+              <ul className="text-sm text-orange-200 space-y-1">
+                <li>• Stay focused on this window during the interview</li>
+                <li>• Switching tabs/windows will be detected</li>
+                <li>• Keep the interview in fullscreen mode</li>
+                <li>• Avoid using other applications</li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     )
@@ -648,6 +698,29 @@ function VideoCall() {
             </div>
           </div>
         )}
+
+        {/* Proctor Panel (Recruiter Only) */}
+        {!isCandidate && showProctorPanel && (
+          <div className="w-80 bg-gray-800 border-l border-gray-700">
+            <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-orange-400" />
+                <h3 className="text-white font-medium">Proctoring</h3>
+              </div>
+              <button onClick={() => setShowProctorPanel(false)} className="text-gray-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-4">
+              <ProctorMonitor 
+                interviewId={interviewId}
+                isCandidate={false}
+                onViolation={handleProctorViolation}
+                isActive={joined}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Control Bar */}
@@ -685,6 +758,22 @@ function VideoCall() {
             <MessageSquare className="w-6 h-6" />
           </button>
           
+          {/* Proctor Monitor Button (Recruiter Only) */}
+          {!isCandidate && (
+            <button 
+              onClick={() => setShowProctorPanel(!showProctorPanel)} 
+              className={`p-4 rounded-full transition-all ${showProctorPanel ? 'bg-orange-500 hover:bg-orange-600' : 'bg-gray-700 hover:bg-gray-600'} text-white relative`}
+              title="Proctoring Monitor"
+            >
+              <Shield className="w-6 h-6" />
+              {proctorViolations.length > 0 && (
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">{proctorViolations.length}</span>
+                </div>
+              )}
+            </button>
+          )}
+          
           <button 
             onClick={toggleFullscreen} 
             className="p-4 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition-all"
@@ -702,6 +791,22 @@ function VideoCall() {
           </button>
         </div>
       </div>
+
+      {/* Proctor Monitor for Candidates (Hidden UI, Background Monitoring) */}
+      <ProctorMonitor 
+        interviewId={interviewId}
+        isCandidate={isCandidate}
+        onViolation={handleProctorViolation}
+        isActive={joined}
+      />
+
+      {/* Proctor Alert for Recruiters */}
+      {!isCandidate && activeAlert && (
+        <ProctorAlert 
+          violation={activeAlert}
+          onDismiss={() => setActiveAlert(null)}
+        />
+      )}
     </div>
   )
 }

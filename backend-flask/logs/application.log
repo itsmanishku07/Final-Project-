@@ -67391,3 +67391,521 @@ google.auth.exceptions.RefreshError: ('invalid_grant: Invalid JWT Signature.', {
 2026-01-15 02:50:21,841 - app - INFO - Flask application initialized in production mode
 2026-01-15 02:50:21,855 - werkzeug - WARNING -  * Debugger is active!
 2026-01-15 02:50:21,859 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-15 02:59:02,882 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:02] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 02:59:05,640 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:05] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 02:59:05,699 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:05] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 02:59:05,702 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:05] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 02:59:09,300 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:09] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 02:59:13,383 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:13] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 02:59:23,435 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:23] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 02:59:24,117 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:24] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 02:59:24,155 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:24] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 02:59:24,473 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:24] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:24,474 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:24] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 02:59:24,477 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:24] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:27,425 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:27] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 02:59:27,972 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 02:59:27,974 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:27] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:29,769 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:29] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 02:59:30,522 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:30] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 02:59:31,136 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:31] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 02:59:31,229 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:31] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:31,231 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:31] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:31,991 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 02:59:31,993 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 02:59:31] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:33,830 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 02:59:33,831 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:33] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 02:59:35,606 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 02:59:35,607 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 02:59:35] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 03:00:07,186 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 03:00:07] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 03:00:07,506 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 03:00:07] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 03:00:07,583 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 03:00:07] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 03:00:07,586 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 03:00:07] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 03:00:10,144 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 03:00:10,145 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 03:00:10] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 03:00:11,992 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 03:00:11,994 - werkzeug - INFO - 10.13.77.84 - - [15/Jan/2026 03:00:11] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:12:51,384 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 22:12:51,385 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 22:12:51,386 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 22:12:51,386 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 22:12:51,386 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 22:12:51,471 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 22:12:51,496 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:51,496 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:51,867 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:51,867 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:51,868 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 22:12:51,872 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:51,878 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 22:12:51,879 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:51,879 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:51,879 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:51,879 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 22:12:51,881 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:51,882 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:51,882 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:51,882 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 22:12:51,912 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 22:12:51,912 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:51,913 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:51,913 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:51,913 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 22:12:51,920 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 22:12:51,920 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 22:12:51,920 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:51,921 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:51,948 - app - INFO - Flask application initialized in production mode
+2026-01-15 22:12:51,989 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.201.143.219:8080
+2026-01-15 22:12:51,989 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-15 22:12:51,992 - werkzeug - INFO -  * Restarting with stat
+2026-01-15 22:12:53,826 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 22:12:53,828 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 22:12:53,828 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 22:12:53,829 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 22:12:53,829 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 22:12:53,899 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 22:12:53,909 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:53,909 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:54,094 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:54,095 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:54,095 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 22:12:54,099 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:54,103 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 22:12:54,104 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:54,104 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:54,104 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:54,105 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 22:12:54,107 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:54,107 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:54,107 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:54,108 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 22:12:54,133 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 22:12:54,134 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:54,135 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 22:12:54,135 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:54,135 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 22:12:54,139 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 22:12:54,140 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 22:12:54,140 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 22:12:54,140 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:12:54,171 - app - INFO - Flask application initialized in production mode
+2026-01-15 22:12:54,184 - werkzeug - WARNING -  * Debugger is active!
+2026-01-15 22:12:54,191 - werkzeug - INFO -  * Debugger PIN: 556-815-485
+2026-01-15 22:13:14,597 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:14] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:13:19,438 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:19] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:13:19,461 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:19] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:19,773 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:19] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:19,774 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:19] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:19,776 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:19] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:19,779 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:19] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:22,274 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:22] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:23,531 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:23] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:24,282 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:24] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:27,412 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:27] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:30,176 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:30] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:33,497 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:33] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:37,597 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:37,599 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:37,600 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:37,601 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:37,603 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:37,609 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:37,910 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:37,927 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:37] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:38,423 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:38] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:39,714 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:39] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:39,831 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:39] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:41,543 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:41] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:41,718 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:41] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:41,813 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:41] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:44,006 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:44] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:45,500 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:45] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:45,503 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:45] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:46,102 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:46] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:46,424 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:46] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:48,133 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:48] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:48,135 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:48] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:49,330 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:49] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:49,926 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:49] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:50,569 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:50] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:50,572 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:50] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:50,576 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:50] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:50,580 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:50] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:52,092 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:52] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:52,144 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:52] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:52,703 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:52] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:53,109 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:53] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:13:53,112 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:53] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:13:54,242 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:54] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:13:54,243 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:54] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:13:54,585 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:54] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:13:54,850 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:54] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:58,157 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:58] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:13:58,594 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:13:58] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:00,282 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:00] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:14:00,487 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:00] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:14:02,393 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:02] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:05,905 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:05] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:14:14,235 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:14] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:14:14,918 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:14] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:14:14,954 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:14] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:15,268 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:15] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:14:15,270 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:15] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:15,271 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:15] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:15,273 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:15] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:14:15,277 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:15] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:17,377 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:17] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:17,934 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:17] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:14:20,249 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:20] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:20,595 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:20] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:14:22,501 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:22] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:14:24,755 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:14:24] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:15:30,749 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:30] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:15:30,751 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:30] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:15:31,437 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:31] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:15:31,858 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:31] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:15:31,860 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:31] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:15:31,863 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:31] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:15:31,868 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:31] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:15:32,185 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:15:32,789 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:32] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:15:33,971 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:33] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:15:34,289 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:15:36,686 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:36] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:15:36,999 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:15:37,601 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:37] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:15:39,722 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:39] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:15:39,996 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:39] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:15:39,999 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:39] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:15:42,172 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:42] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:15:43,579 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:43] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:15:44,424 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:44] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:15:46,011 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:46] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:15:55,032 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:55] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:15:55,660 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:55] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:15:55,740 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:55] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:15:56,050 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:56] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:15:57,304 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:15:57,307 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:57] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:15:58,813 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:15:58,815 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:58] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:15:59,995 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:15:59] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:16:00,676 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:00] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:16:00,772 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:00] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:16:01,089 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:01] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:16:01,091 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:01] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:16:01,093 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:01] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:16:02,591 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:02] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:16:02,917 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:16:02,919 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:02] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:16:04,050 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:04] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:16:04,371 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:16:04,373 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:16:04] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:36:14,394 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:14] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:36:15,070 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:15] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:36:15,147 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:15] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:36:15,150 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:15] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:36:15,153 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:15] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:36:15,157 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:15] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:36:15,179 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:36:17,067 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:17] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:36:17,124 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:36:19,984 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:19] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:36:20,618 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:20] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:36:23,944 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:23] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:36:23,946 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:23] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:36:24,226 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:24] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:36:28,279 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:28] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:36:32,602 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:32] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:36:36,833 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:36] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:36:37,247 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:37] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:36:37,351 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:37] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:36:37,354 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:37] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:36:40,461 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:36:40,463 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:40] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:36:42,717 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:36:42,719 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:36:42] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:37:09,580 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:09] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:09,584 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:09] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:09,632 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:37:11,496 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:11] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:11,525 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:37:13,296 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:13] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:14,766 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:14] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:14,782 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:14] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:14,796 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:37:16,620 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:16] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:37:16,639 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:37:18,449 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:37:18] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:38:30,651 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:30] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:38:30,710 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:38:32,537 - repositories.job_repository - INFO - Job saved successfully: Java Developer
+2026-01-15 22:38:32,538 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:32] "[35m[1mPOST /api/jobs HTTP/1.1[0m" 201 -
+2026-01-15 22:38:32,664 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:32] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:38:32,712 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:38:34,542 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:34] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:38:49,097 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:38:49,627 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:38:49,711 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:38:49,714 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/jobs/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:49,715 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/matches/job/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:49,719 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:38:49,723 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/matches/job/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:49,727 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:49] "OPTIONS /api/jobs/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:49,769 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:38:50,917 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:50] "GET /api/jobs/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:51,613 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:51] "GET /api/jobs/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:52,774 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:52] "GET /api/matches/job/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:53,351 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:53] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:38:53,368 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:38:55,090 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:55] "GET /api/matches/job/59410b74-7724-46b5-b064-27e9d1f413fe HTTP/1.1" 200 -
+2026-01-15 22:38:55,148 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:38:55] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:39:42,956 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:42] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:39:42,961 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:42] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:39:46,801 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:46] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:39:51,716 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:51] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:39:52,906 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:52] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:39:53,354 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:53] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:39:54,685 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:54] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:39:54,791 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:54] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028]/join HTTP/1.1" 200 -
+2026-01-15 22:39:54,795 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:54] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028]/join HTTP/1.1" 200 -
+2026-01-15 22:39:55,791 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:55] "[33mGET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028]/join HTTP/1.1[0m" 404 -
+2026-01-15 22:39:56,595 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:56] "[33mGET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028]/join HTTP/1.1[0m" 404 -
+2026-01-15 22:39:59,978 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:39:59] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:40:00,441 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:40:00] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:40:00,534 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:40:00] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:40:00,538 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:40:00] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:40:03,607 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:40:03,609 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:40:03] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:40:05,980 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:40:05,982 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:40:05] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:42:15,410 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:42:15] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:42:15,814 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:42:15] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:42:15,914 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:42:15] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:42:15,918 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:42:15] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:42:18,851 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:42:18,877 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:42:18] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:42:21,162 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:42:21,171 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:42:21] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:11,284 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:11] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:43:11,994 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:11] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:43:12,052 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:12] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:43:12,370 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:12] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:12,372 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:12] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:43:12,373 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:12] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:13,708 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:43:13] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:43:15,162 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:43:15] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:43:15,279 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:43:15] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:15,282 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:43:15] "OPTIONS /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:15,794 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:15] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:43:17,075 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:43:17,077 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:17] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:19,118 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:43:19,120 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:43:19] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:19,545 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:19] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:43:20,050 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:43:20,051 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:43:20] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:43:20,490 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 02:45:00, type: <class 'datetime.datetime'>
+2026-01-15 22:43:20,492 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:43:20] "GET /api/interviews/5d950ab9-e301-4bf6-9260-4750d7817028/join HTTP/1.1" 200 -
+2026-01-15 22:44:14,902 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:14] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:44:14,904 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:14] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:44:14,905 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:14] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:44:14,907 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:14] "OPTIONS /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:44:14,909 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:14] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:44:14,913 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:14] "OPTIONS /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:44:15,222 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:15] "OPTIONS /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:44:15,224 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:15] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:44:15,632 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:15] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:44:15,893 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:15] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:44:16,280 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:16] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:44:16,523 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:16] "GET /api/jobs HTTP/1.1" 200 -
+2026-01-15 22:44:16,637 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:16] "GET /api/jobs/companies HTTP/1.1" 200 -
+2026-01-15 22:44:16,854 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:16] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:44:17,519 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:17] "GET /api/resumes/my-resumes HTTP/1.1" 200 -
+2026-01-15 22:44:18,552 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:18] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:44:33,120 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:33] "OPTIONS /api/applications/apply HTTP/1.1" 200 -
+2026-01-15 22:44:33,735 - routes.application_routes - INFO - Apply request data: {'job_id': 'e4eb810b-57cf-4659-8b19-56dfb6fa7f44', 'resume_id': '015b6a95-5e0b-4807-8a58-92c1ee781bd1', 'cover_letter': ''}
+2026-01-15 22:44:33,736 - routes.application_routes - INFO - Applying to job_id=e4eb810b-57cf-4659-8b19-56dfb6fa7f44 with resume_id=015b6a95-5e0b-4807-8a58-92c1ee781bd1
+2026-01-15 22:44:35,214 - services.ai_service - INFO - Performing job matching for 6 required skills
+2026-01-15 22:44:42,056 - services.ai_service - INFO - Job matching completed using Databricks LLM
+2026-01-15 22:44:42,544 - repositories.application_repository - INFO - Application saved: b13f34a9-b4c9-4d22-9621-add5c2ee81dc for job e4eb810b-57cf-4659-8b19-56dfb6fa7f44
+2026-01-15 22:44:42,546 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:44:42] "[35m[1mPOST /api/applications/apply HTTP/1.1[0m" 201 -
+2026-01-15 22:46:09,505 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:09] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:09,508 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:09] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:09,511 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:09] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:09,515 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:09] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:09,538 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:46:10,566 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:10] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:10,579 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:46:11,569 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:11] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:12,231 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:12] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:14,864 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:14] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:19,451 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:19] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:19,453 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:19] "OPTIONS /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:19,481 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:46:20,224 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:20] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:20,240 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 22:46:20,998 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:20] "GET /api/jobs/my-jobs HTTP/1.1" 200 -
+2026-01-15 22:46:24,109 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:24] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:24,113 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:24] "OPTIONS /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:26,490 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:26] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:28,721 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:28] "GET /api/applications/dashboard HTTP/1.1" 200 -
+2026-01-15 22:46:30,535 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:30] "OPTIONS /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:46:30,537 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:30] "OPTIONS /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:46:32,753 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:32] "GET /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:46:35,863 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:35] "GET /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:46:38,937 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:38] "OPTIONS /api/applications/b13f34a9-b4c9-4d22-9621-add5c2ee81dc/status HTTP/1.1" 200 -
+2026-01-15 22:46:41,316 - repositories.application_repository - INFO - Application updated: b13f34a9-b4c9-4d22-9621-add5c2ee81dc
+2026-01-15 22:46:41,318 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:41] "PUT /api/applications/b13f34a9-b4c9-4d22-9621-add5c2ee81dc/status HTTP/1.1" 200 -
+2026-01-15 22:46:41,357 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:41] "OPTIONS /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:46:44,416 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:44] "GET /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:46:54,818 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:46:54] "OPTIONS /api/interviews/schedule HTTP/1.1" 200 -
+2026-01-15 22:46:56,413 - routes.interview_routes - INFO - Received scheduled_at: 2026-01-15T22:46
+2026-01-15 22:46:56,416 - routes.interview_routes - INFO - Parsed datetime: 2026-01-15 22:46:00
+2026-01-15 22:46:57,002 - repositories.interview_repository - INFO - Interview saved: 8b87d942-411a-45cb-b639-7c77939e682a
+2026-01-15 22:47:07,071 - services.email_service - INFO - Email sent successfully to manish0704ku@gmail.com: Interview Scheduled - Java Developer at IBM
+2026-01-15 22:47:07,077 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:07] "[35m[1mPOST /api/interviews/schedule HTTP/1.1[0m" 201 -
+2026-01-15 22:47:07,127 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:07] "OPTIONS /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:47:09,099 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:09] "GET /api/applications/job/e4eb810b-57cf-4659-8b19-56dfb6fa7f44 HTTP/1.1" 200 -
+2026-01-15 22:47:37,166 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:47:37] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:37,168 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:47:37] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:40,358 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:47:40] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:43,325 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:47:43] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:50,754 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:50] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:50,758 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:50] "OPTIONS /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:53,869 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:53] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:47:56,818 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:47:56] "GET /api/interviews/my-interviews HTTP/1.1" 200 -
+2026-01-15 22:48:04,919 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:48:04] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:48:05,160 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:05] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:48:05,450 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:48:05] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:48:05,543 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:48:05] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:05,546 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:48:05] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:05,780 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:05] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:48:05,856 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:05] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:48:06,173 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:06] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:06,175 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:06] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:48:06,178 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:06] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:06,644 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:48:06,646 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:48:06] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:07,582 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:48:07,584 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:07] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:07,740 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:07] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:48:07,773 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:48:07,775 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:48:07] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:08,958 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:48:08,959 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:08] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:48:09,550 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:48:09] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:00,013 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:00] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:00,623 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:00] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:00,678 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:00] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:00,988 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:00] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:00,990 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:00] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:00,992 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:00] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:02,414 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:02,416 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:02] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:02,495 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:02] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:03,842 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:03,843 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:03] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:04,185 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:04] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:04,367 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:04] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:04,556 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:04] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:04,687 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:04] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:04,690 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:04] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:05,804 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:05,806 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:05] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:06,900 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:06,902 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:06] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:34,576 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:34] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:34,957 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:34] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:35,078 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:35] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:35,081 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:35] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:36,195 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:36,198 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:36] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:37,320 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:37,322 - werkzeug - INFO - 10.201.143.84 - - [15/Jan/2026 22:49:37] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:46,240 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:46] "OPTIONS /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:46,870 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:46] "GET /api/auth/profile HTTP/1.1" 200 -
+2026-01-15 22:49:46,944 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:46] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:47,258 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:47] "OPTIONS /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:47,260 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:47] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:47,262 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:47] "OPTIONS /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:48,712 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:48,714 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:48] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:48,756 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:48] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 22:49:50,123 - routes.interview_routes - INFO - Interview scheduled_at: 2026-01-15 22:46:00, type: <class 'datetime.datetime'>
+2026-01-15 22:49:50,124 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:50] "GET /api/interviews/8b87d942-411a-45cb-b639-7c77939e682a/join HTTP/1.1" 200 -
+2026-01-15 22:49:50,553 - werkzeug - INFO - 127.0.0.1 - - [15/Jan/2026 22:49:50] "GET /api/applications/my-applications HTTP/1.1" 200 -
+2026-01-15 23:13:39,301 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 23:13:39,303 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 23:13:39,303 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 23:13:39,304 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 23:13:39,304 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 23:13:39,401 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 23:13:39,420 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:39,421 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:39,724 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:39,725 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:39,725 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:13:39,730 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:39,736 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:13:39,737 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:39,737 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:39,738 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:39,738 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:13:39,740 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:39,741 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:39,741 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:39,742 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:13:39,779 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:13:39,779 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:39,780 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:39,780 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:39,780 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:13:39,786 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 23:13:39,786 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:13:39,787 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:39,787 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:39,825 - app - INFO - Flask application initialized in production mode
+2026-01-15 23:13:39,869 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.201.143.219:8080
+2026-01-15 23:13:39,870 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-15 23:13:39,874 - werkzeug - INFO -  * Restarting with stat
+2026-01-15 23:13:41,891 - config.firebase_config - INFO - Loading Firebase credentials from: C:\Users\Manish\Desktop\Final Project\backend-flask\config\..\firebase-service-account.json
+2026-01-15 23:13:41,892 - config.firebase_config - INFO - Project ID: resume-project-5aa61
+2026-01-15 23:13:41,892 - config.firebase_config - INFO - Client Email: firebase-adminsdk-fbsvc@resume-project-5aa61.iam.gserviceaccount.com
+2026-01-15 23:13:41,892 - config.firebase_config - INFO - Private Key ID: 35ab6bdf7761c597176eb325a8408a74c4a4d4a1
+2026-01-15 23:13:41,892 - config.firebase_config - INFO - Client ID: 115616927845463747914
+2026-01-15 23:13:41,963 - config.firebase_config - INFO - Firebase initialized successfully from JSON file
+2026-01-15 23:13:41,975 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:41,976 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:42,173 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:42,173 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:42,174 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:13:42,176 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:42,180 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:13:42,180 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:42,181 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:42,181 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:42,181 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:13:42,184 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:42,184 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:42,185 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:42,186 - repositories.base_repository - INFO - Using Firebase Admin SDK for matches
+2026-01-15 23:13:42,210 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:13:42,211 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:42,211 - repositories.base_repository - INFO - Using Firebase Admin SDK for resumes
+2026-01-15 23:13:42,211 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:42,212 - services.ai_service - INFO - Production AI Service initialized with Databricks LLM
+2026-01-15 23:13:42,215 - repositories.base_repository - INFO - Using Firebase Admin SDK for interviews
+2026-01-15 23:13:42,216 - repositories.base_repository - INFO - Using Firebase Admin SDK for applications
+2026-01-15 23:13:42,216 - repositories.base_repository - INFO - Using Firebase Admin SDK for jobs
+2026-01-15 23:13:42,216 - repositories.base_repository - INFO - Using Firebase Admin SDK for users
+2026-01-15 23:13:42,256 - app - INFO - Flask application initialized in production mode
+2026-01-15 23:13:42,277 - werkzeug - WARNING -  * Debugger is active!
+2026-01-15 23:13:42,283 - werkzeug - INFO -  * Debugger PIN: 418-087-069

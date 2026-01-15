@@ -13,7 +13,6 @@ __pycache__/
 !.env.example
 !.env.vercel.example
 
-# Firebase credentials (NEVER commit these!)
 firebase-service-account.json
 *-service-account.json
 *.json.bak
